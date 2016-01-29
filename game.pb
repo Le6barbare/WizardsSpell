@@ -15,9 +15,9 @@
 
 
 ;----- declare variable 
-
-;- VARIABLES
-
+  Global i ,j
+;- VARIABLES DIM
+  Global Dim luneAnim(21), Dim lunewaitAnim(21)
 ;- Procedures
   Declare Menu()
   Declare GAME()
@@ -111,8 +111,8 @@
     Next
   EndProcedure
 ; IDE Options = PureBasic 5.31 (Windows - x86)
-; CursorPosition = 82
-; FirstLine = 68
+; CursorPosition = 15
+; FirstLine = 3
 ; Folding = -
 ; EnableUnicode
 ; EnableXP
