@@ -35,7 +35,12 @@
 
 
 ;-Chargement sprite
-;LoadSprite(2,"Data/space2.png",#PB_Sprite_AlphaBlending)
+LoadSprite(1,"Ressources/img/background.png")
+LoadSprite(2,"Ressources/img/spells.png")
+LoadSprite(3,"Ressources/img/spellred.png")
+LoadSprite(4,"Ressources/img/spellgreen.png")
+LoadSprite(5,"Ressources/img/spellwhite.png")
+;LoadSprite(1,"Ressources/img/space2.png",#PB_Sprite_AlphaBlending)
 ;TransparentSpriteColor(2, RGB(255, 0, 255)) 
 
 ;-Creation sprite
@@ -52,7 +57,7 @@
 
 
 ; initialisation
-  Mode=0
+  Mode=1
   
 ;-  *********************  
 ;--  START GAME LOOP
@@ -75,7 +80,8 @@
 ;- PROCEDURES
 
   Procedure GAME()
-    
+    DisplaySprite(1,0,0)
+    DisplaySprite(2,0,0)
   EndProcedure
 
   Procedure Menu()
@@ -92,8 +98,8 @@
     Next
   EndProcedure
 ; IDE Options = PureBasic 5.31 (Windows - x86)
-; CursorPosition = 62
-; FirstLine = 51
+; CursorPosition = 41
+; FirstLine = 24
 ; Folding = -
 ; EnableUnicode
 ; EnableXP
