@@ -37,7 +37,12 @@
 ;-Chargement sprite
 ;LoadSprite(2,"Data/space2.png",#PB_Sprite_AlphaBlending)
 ;TransparentSpriteColor(2, RGB(255, 0, 255)) 
-
+  
+ For i=0 To 21
+  LoadSprite(50+i,"Data/Images/Lune/lune"+Str(i)+".png",#PB_Sprite_AlphaBlending)
+ Next
+  
+  
 ;-Creation sprite
 ;-Chargement texte
   LoadImage(200,"Ressources/img/Font.bmp")              ; Charge l'image de toutes les lettres
@@ -76,6 +81,20 @@
 
   Procedure GAME()
     
+      For j=0 To 21
+
+      lunewaitAnim(j)+1
+      If lunewaitAnim(j)>10
+         lunewaitAnim(j)=0
+         luneAnim(j)+1
+ 
+         If luneAnim(j)>21 :  luneAnim(j)=0 : EndIf
+      EndIf
+        
+      DisplayTransparentSprite(50+luneAnim(j),200,200,250)   
+   
+   Next
+    
   EndProcedure
 
   Procedure Menu()
@@ -92,8 +111,8 @@
     Next
   EndProcedure
 ; IDE Options = PureBasic 5.31 (Windows - x86)
-; CursorPosition = 62
-; FirstLine = 51
+; CursorPosition = 82
+; FirstLine = 68
 ; Folding = -
 ; EnableUnicode
 ; EnableXP
