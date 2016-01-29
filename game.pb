@@ -15,9 +15,9 @@
 
 
 ;----- declare variable 
-
-;- VARIABLES
-
+  Global i ,j
+;- VARIABLES DIM
+  Global Dim luneAnim(21), Dim lunewaitAnim(21)
 ;- Procedures
   Declare Menu()
   Declare GAME()
@@ -40,9 +40,15 @@ LoadSprite(2,"Ressources/img/spells.png")
 LoadSprite(3,"Ressources/img/spellred.png")
 LoadSprite(4,"Ressources/img/spellgreen.png")
 LoadSprite(5,"Ressources/img/spellwhite.png")
+LoadSprite(6,"Ressources/img/baguette.png",#PB_Sprite_AlphaBlending)
 ;LoadSprite(1,"Ressources/img/space2.png",#PB_Sprite_AlphaBlending)
 ;TransparentSpriteColor(2, RGB(255, 0, 255)) 
-
+  
+For i=0 To 21
+  LoadSprite(50+i,"Ressources/img/Lune/lune"+Str(i)+".png",#PB_Sprite_AlphaBlending)
+Next
+  
+  
 ;-Creation sprite
 ;-Chargement texte
   LoadImage(200,"Ressources/img/Font.bmp")              ; Charge l'image de toutes les lettres
@@ -85,6 +91,17 @@ LoadSprite(5,"Ressources/img/spellwhite.png")
     DisplaySprite(3,2,2)
     DisplaySprite(4,78,2)
     DisplaySprite(5,154,2)
+    DisplayTransparentSprite(6,488,478,255)
+    
+    For j=0 To 21
+      lunewaitAnim(j)+1
+      If lunewaitAnim(j)>10
+         lunewaitAnim(j)=0
+         luneAnim(j)+1
+         If luneAnim(j)>21 :  luneAnim(j)=0 : EndIf
+      EndIf
+      DisplayTransparentSprite(50+luneAnim(j),200,200,250)   
+    Next
   EndProcedure
 
   Procedure Menu()
@@ -101,8 +118,8 @@ LoadSprite(5,"Ressources/img/spellwhite.png")
     Next
   EndProcedure
 ; IDE Options = PureBasic 5.31 (Windows - x86)
-; CursorPosition = 86
-; FirstLine = 66
+; CursorPosition = 102
+; FirstLine = 86
 ; Folding = -
 ; EnableUnicode
 ; EnableXP
