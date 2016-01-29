@@ -82,6 +82,9 @@ LoadSprite(5,"Ressources/img/spellwhite.png")
   Procedure GAME()
     DisplaySprite(1,0,0)
     DisplaySprite(2,0,0)
+    DisplaySprite(3,2,2)
+    DisplaySprite(4,78,2)
+    DisplaySprite(5,154,2)
   EndProcedure
 
   Procedure Menu()
@@ -98,8 +101,8 @@ LoadSprite(5,"Ressources/img/spellwhite.png")
     Next
   EndProcedure
 ; IDE Options = PureBasic 5.31 (Windows - x86)
-; CursorPosition = 41
-; FirstLine = 24
+; CursorPosition = 86
+; FirstLine = 66
 ; Folding = -
 ; EnableUnicode
 ; EnableXP
