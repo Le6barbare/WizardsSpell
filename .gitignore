@@ -21,9 +21,10 @@ $RECYCLE.BIN/
 *.png
 *.jpg
 *.bmp
+*.gif
 *.mp3
 *.wav
-*.gif
+*.ogg
 
 # =========================
 # Operating System Files
