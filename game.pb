@@ -70,9 +70,9 @@
 =======
 LoadSprite(1,"Ressources/img/background-alpha.png")
 LoadSprite(2,"Ressources/img/HUB/Interface.png",#PB_Sprite_AlphaBlending)
-LoadSprite(3,"Ressources/img/Sort/livre-blanc.png",#PB_Sprite_AlphaBlending)
-LoadSprite(4,"Ressources/img/Sort/livre-rouge.png",#PB_Sprite_AlphaBlending)
-LoadSprite(5,"Ressources/img/Sort/livre-vert.png",#PB_Sprite_AlphaBlending)
+LoadSprite(3,"Ressources/img/Sort/livre-rouge.png",#PB_Sprite_AlphaBlending)
+LoadSprite(4,"Ressources/img/Sort/livre-vert.png",#PB_Sprite_AlphaBlending)
+LoadSprite(5,"Ressources/img/Sort/livre-blanc.png",#PB_Sprite_AlphaBlending)
 LoadSprite(6,"Ressources/img/baguette.png",#PB_Sprite_AlphaBlending)
 LoadSprite(7,"Ressources/img/Sort/sort-rouge.png",#PB_Sprite_AlphaBlending)
 LoadSprite(8,"Ressources/img/Sort/sort-vert.png",#PB_Sprite_AlphaBlending)
@@ -247,6 +247,7 @@ For j=0 To 4
       TimeSort=5
     EndIf
     
+<<<<<<< HEAD
     If SpellKey<>0 And TimeSort=5
       If Angle=-20 And Monstre(1)<>0
         If Sorts(SpellKey)=Monstre(1)+2
@@ -277,6 +278,12 @@ For j=0 To 4
       EndIf
     EndIf
     
+=======
+    
+    
+    
+   ;-utilisation des spell
+>>>>>>> origin/master
     If SpellKey<>0 And TimeSort>0 
       If Angle=-20 Or Angle=0 Or Angle=20
         DisplayTransparentSprite(Sorts(SpellKey)+4,PositionEffetSortX,PositionEffetSortY,230)
@@ -301,9 +308,13 @@ For j=0 To 4
     
     
 <<<<<<< HEAD
+<<<<<<< HEAD
     ;--calcul trajectoire lune*
 =======
   ;--calcul trajectoire lune*
+>>>>>>> origin/master
+=======
+  ;--calcul trajectoire lune
 >>>>>>> origin/master
     luneWait = luneWait + 1
     If luneWait>10
@@ -311,20 +322,22 @@ For j=0 To 4
       If luneX.f>1024/2 : multi = multi - 1 : EndIf
       If luneX.f>1024/2+200 : luneX.f=1024/2-200 : nbNuit+1 :
    
-      tirage = Random(5,3)
-      precedant1 = tirage
-      Sorts(1) = tirage
-      tirage = Random(5,3)
-      While tirage = precedant1
+   
+      ;-melange des grimoires
         tirage = Random(5,3)
-      Wend
-      precedant2 = tirage
-      Sorts(2) = tirage
-      tirage = Random(5,3)
-      While tirage = precedant2 Or tirage = precedant1
+        precedant1 = tirage
+        Sorts(1) = tirage
         tirage = Random(5,3)
-      Wend
-      Sorts(3) = tirage
+        While tirage = precedant1
+          tirage = Random(5,3)
+        Wend
+        precedant2 = tirage
+        Sorts(2) = tirage
+        tirage = Random(5,3)
+        While tirage = precedant2 Or tirage = precedant1
+          tirage = Random(5,3)
+        Wend
+        Sorts(3) = tirage
 
     EndIf
       luneX.f = luneX.f + multi/30
@@ -335,9 +348,16 @@ For j=0 To 4
     DisplayTransparentSprite(23,2,274,255)
     
 <<<<<<< HEAD
+<<<<<<< HEAD
     AffText(Str(Score),800,50,255)
     AffText(Str(Vie),800,20,255)
 =======
+=======
+    
+    
+    
+    
+>>>>>>> origin/master
   ;-- calcul nb nuit
   
   AffText("Nuit "+ Str(nbNuit),815,5,255)
@@ -364,10 +384,7 @@ For j=0 To 4
     If nuage5.f>1024 : nuage5.f = 0-100 : EndIf
     DisplayTransparentSprite(21,nuage5.f,300,255)
   
-  ;-- code des grimoires
-   
-
-  
+  ;-- affichage des grimoires
     DisplayTransparentSprite(Sorts(1),2,2)
     DisplayTransparentSprite(Sorts(2),110,2)
     DisplayTransparentSprite(Sorts(3),210,2)
@@ -445,11 +462,16 @@ For j=0 To 4
   EndProcedure
 ; IDE Options = PureBasic 5.31 (Windows - x86)
 <<<<<<< HEAD
+<<<<<<< HEAD
 ; CursorPosition = 92
 ; FirstLine = 64
 =======
 ; CursorPosition = 228
 ; FirstLine = 204
+>>>>>>> origin/master
+=======
+; CursorPosition = 44
+; FirstLine = 37
 >>>>>>> origin/master
 ; Folding = -
 ; EnableUnicode
