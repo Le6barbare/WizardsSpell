@@ -50,7 +50,7 @@ LoadSprite(9,"Ressources/img/Sort/sort-blanc.png",#PB_Sprite_AlphaBlending)
 LoadSprite(10,"Ressources/img/Lune/lune0.png",#PB_Sprite_AlphaBlending)
 LoadSprite(21,"Ressources/img/Animation/nuage1.png",#PB_Sprite_AlphaBlending)
 LoadSprite(22,"Ressources/img/Animation/nuage2.png",#PB_Sprite_AlphaBlending)
-LoadSprite(23,"Ressources/img/Animation/nuage2.png",#PB_Sprite_AlphaBlending)
+LoadSprite(23,"Ressources/img/Animation/montage-eau.png",#PB_Sprite_AlphaBlending)
  
 LoadImage(300,"Ressources/img/Animation/flamme2.png",#PB_Sprite_AlphaBlending)
 For j=0 To 4
@@ -212,8 +212,9 @@ For j=0 To 4
       luneX.f = luneX.f + multi/30
       luneWait=0
     EndIf
-    luneY.f = initCentrLuneY-Sqr(200*200-(luneX.f-initCentrLuneX)*(luneX.f-initCentrLuneX))
+    luneY.f = initCentrLuneY-Sqr(200*200-(luneX.f-initCentrLuneX)*(luneX.f-initCentrLuneX)) 
     DisplayTransparentSprite(10,luneX,luneY,255)
+    DisplayTransparentSprite(23,2,274,255)
     
    ;-- trajectoire nuages 
    nuage1.f+1/5
@@ -235,7 +236,6 @@ For j=0 To 4
    nuage5.f+1/4
    If nuage5.f>1024 : nuage5.f = 0-100 : EndIf
    DisplayTransparentSprite(21,nuage5.f,300,255)
-
     
   EndProcedure
 
@@ -253,8 +253,8 @@ For j=0 To 4
     Next
   EndProcedure
 ; IDE Options = PureBasic 5.31 (Windows - x86)
-; CursorPosition = 236
-; FirstLine = 215
+; CursorPosition = 216
+; FirstLine = 204
 ; Folding = -
 ; EnableUnicode
 ; EnableXP
