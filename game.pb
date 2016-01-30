@@ -19,14 +19,14 @@
   Global nuage1.f=Random(1024), nuage2.f=Random(1024), nuage3.f=Random(1024), nuage4.f=Random(1024), nuage5.f=Random(1024)
   Global tirage, precedant1, precedant2
   Global SelectMenu=0,TempoMenu=50,Mode,Quit, TempoStory=1000,GameLaunch=0
-  Global nbVieMax=15, stopvie=0, Vie, viePerdu, finish, FlamNum=1
+  Global nbfeuMax=10, Vie, viePerdu,  FlamNum=1, timerGameOver
 
 ; Tableaux
   Global Dim Sorts(3), Dim PositionEffetSort(6)
   Global Dim flamAnim(4), Dim flamWaitAnim(4)
   Global Dim Monstre(6), Dim TempoRepopMonstre(3)
 
-  Global Dim feuX(nbVieMax),Dim feuY(nbVieMax),Dim fireBool(nbVieMax)
+  Global Dim feuX(nbfeuMax),Dim feuY(nbfeuMax),Dim fireBool(nbfeuMax)
   
   
 ;- PROCEDURE
@@ -72,6 +72,8 @@
   LoadSprite(35,"Ressources/img/TitleScreen/quitter.png",#PB_Sprite_AlphaBlending)
   LoadSprite(36,"Ressources/img/TitleScreen/quitter2.png",#PB_Sprite_AlphaBlending)
   LoadSprite(37,"Ressources/img/TitleScreen/story.png",#PB_Sprite_AlphaBlending)
+  LoadSprite(38,"Ressources/img/TitleScreen/game-over.png",#PB_Sprite_AlphaBlending)
+  
    
   LoadImage(300,"Ressources/img/Animation/flamme2.png",#PB_Sprite_AlphaBlending)
     For j=0 To 4
@@ -116,11 +118,9 @@
   TempoRepopMonstre(1)=Random(300,50)
   TempoRepopMonstre(2)=Random(300,50)
   TempoRepopMonstre(3)=Random(300,50)
+  Vie=10
   
-  Vie=15
-  viePerdu = Vie-1
-  
-  For i=0 To nbVieMax
+  For i=0 To nbfeuMax
     feuX(i)=Random(840,640)
     feuY(i)=Random(670,580)
   Next
@@ -180,7 +180,8 @@ Procedure Menu()
       DisplaySprite(37,0,0)
       ;TempoStory=1000
       TempoStory-1
-      AffText("TempoStory:" + Str(TempoStory),600,50,255)
+      ;AffText("TempoStory:" + Str(TempoStory),600,50,255)
+      AffText("Espace/entrer pour commencer",600,650,255)
       If TempoStory<900
         If KeyboardPushed(#PB_Key_Space) Or KeyboardPushed(#PB_Key_Return) Or KeyboardPushed(#PB_Key_Up) Or KeyboardPushed(#PB_Key_Down) Or KeyboardPushed(#PB_Key_Right) Or KeyboardPushed(#PB_Key_Left) Or KeyboardPushed(#PB_Key_Q) Or KeyboardPushed(#PB_Key_S) Or KeyboardPushed(#PB_Key_D) Or KeyboardPushed(#PB_Key_Z)  Or KeyboardPushed(#PB_Key_K) Or KeyboardPushed(#PB_Key_L) Or KeyboardPushed(#PB_Key_M)
           TempoStory=0
@@ -190,8 +191,33 @@ Procedure Menu()
         Mode=1
         ;GameLaunch=0
       EndIf
+      ;-- innitialisation partie
+        Score=0
+        Sorts(1)= 3
+        Sorts(2)= 4
+        Sorts(3)= 5
+        Monstre(1)=Random(3,1)
+        Monstre(2)=Random(3,1)
+        Monstre(3)=Random(3,1)
+        Monstre(4)=0
+        Monstre(5)=0
+        Monstre(6)=0
+        TempoRepopMonstre(1)=Random(300,50)
+        TempoRepopMonstre(2)=Random(300,50)
+        TempoRepopMonstre(3)=Random(300,50)
+        Vie=10  
+        nbnuit=1
+        luneX.f=1024/2-200
+        luneY.f=0
+        multi=0
+        nuage1.f=Random(1024)
+        nuage2.f=Random(1024)
+        nuage3.f=Random(1024)
+        nuage4.f=Random(1024)
+        nuage5.f=Random(1024)
     EndIf  
   EndProcedure
+  
   
   Procedure GAME()
     DisplaySprite(1,0,0)
@@ -441,24 +467,33 @@ Procedure Menu()
         TempoRepopMonstre(3)=Random(300,50)
       EndIf
     EndIf
-  ;--Affiche flamme bare de vie
+  ;--Affiche gameOver bare de vie
   
+    If Vie<=0 
      Flamme()
+     DisplayTransparentSprite(38,1024/2-SpriteWidth(38)/2,768/2-SpriteHeight(38)/2,230)
+     timerGameOver+1
+     GameLaunch=0
+     If timerGameOver>200 
+        Mode=0
+        timerGameOver=0
+     EndIf 
+    EndIf
 
      For j=1 To Vie
        DisplaySprite(20,860+j*10,30)
      Next
-    
+;     
 ;     AffText(Str(MouseX()),100,500,255)
 ;     AffText(Str(MouseY()),100,600,255)
-;     
+; 
 ;     DisplayTransparentSprite(23,MouseX(),MouseY(),255)
-;   
+
   EndProcedure
   
   Procedure Flamme() 
      ;-Affichage du feu et de la vie;  
-     For j=0 To nbVieMax
+     For j=0 To nbfeuMax
        For i=0 To 4
          flamWaitAnim(i)+1
          If flamWaitAnim(i)>5
@@ -482,8 +517,8 @@ Procedure Menu()
   EndProcedure
 
 ; IDE Options = PureBasic 5.31 (Windows - x86)
-; CursorPosition = 256
-; FirstLine = 235
+; CursorPosition = 207
+; FirstLine = 198
 ; Folding = 4
 ; EnableUnicode
 ; EnableXP
