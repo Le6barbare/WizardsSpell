@@ -5,12 +5,15 @@
   InitSprite()
   InitMouse()
   InitKeyboard()
+  If InitJoystick()
+    EnableJoystick = 1
+  EndIf
   InitSound()
 
 ;----- Décodeur des formats images
   UsePNGImageDecoder()
   UseJPEGImageDecoder()
-  UseOGGSoundDecoder() 
+  UseOGGSoundDecoder()
 
 ;----- VARIABLES
 
@@ -18,8 +21,8 @@
   Global luneWait=0, luneX.f=1024/2-200, luneY.f=0, initCentrLuneX=1024/2, initCentrLuneY=250, multi, nbnuit = 1
   Global nuage1.f=Random(1024), nuage2.f=Random(1024), nuage3.f=Random(1024), nuage4.f=Random(1024), nuage5.f=Random(1024)
   Global tirage, precedant1, precedant2
-  Global SelectMenu=0,TempoMenu=50,Mode,Quit, TempoStory=1000,GameLaunch=0
-  Global nbVieMax=15, stopvie=0, Vie, viePerdu, finish, FlamNum=1
+  Global SelectMenu=0,TempoMenu=50,Mode,Quit,TempoStory=1000,GameLaunch=0
+  Global nbVieMax=15,stopvie=0,Vie,viePerdu,finish,FlamNum=1
 
 ; Tableaux
   Global Dim Sorts(3), Dim PositionEffetSort(6)
@@ -74,20 +77,20 @@
   LoadSprite(37,"Ressources/img/TitleScreen/story.png",#PB_Sprite_AlphaBlending)
    
   LoadImage(300,"Ressources/img/Animation/flamme2.png",#PB_Sprite_AlphaBlending)
-    For j=0 To 4
-      GrabImage(300,1,j*320/5,0, (j+1)*320/5,64)
-      CreateSprite(300+j,320/5,64,#PB_Sprite_AlphaBlending)
-      StartDrawing(SpriteOutput(j+300))
-      DrawImage(ImageID(1),0,0)
-      StopDrawing()
-      TransparentSpriteColor(j+300,RGB(0,0,0)) 
-    Next
+  For j=0 To 4
+    GrabImage(300,1,j*320/5,0, (j+1)*320/5,64)
+    CreateSprite(300+j,320/5,64,#PB_Sprite_AlphaBlending)
+    StartDrawing(SpriteOutput(j+300))
+    DrawImage(ImageID(1),0,0)
+    StopDrawing()
+    TransparentSpriteColor(j+300,RGB(0,0,0)) 
+  Next
 
- ;creation de la bare du nb Vie
- CreateSprite(20,10,5,#PB_Sprite_AlphaBlending)
- StartDrawing(SpriteOutput(20))
- Box(0,0,10,5,RGB(255,0,0))
- StopDrawing()
+;- Creation de la bare du nb Vie
+  CreateSprite(20,10,5,#PB_Sprite_AlphaBlending)
+  StartDrawing(SpriteOutput(20))
+  Box(0,0,10,5,RGB(255,0,0))
+  StopDrawing()
  
 ;- Chargement Font
   LoadImage(200,"Ressources/img/Font.bmp")        ; Charge l'image de toutes les lettres
@@ -107,12 +110,12 @@
   Sorts(3)= 5
   PositionEffetSortX=380
   PositionEffetSortY=565
-  Monstre(1)=Random(3,1)
-  Monstre(2)=Random(3,1)
-  Monstre(3)=Random(3,1)
-  Monstre(4)=0
-  Monstre(5)=0
-  Monstre(6)=0
+  Monstre(1)=0;Random(3,1)
+  Monstre(2)=0;Random(3,1)
+  Monstre(3)=0;Random(3,1)
+  Monstre(4)=0 ;Luminosité Monstre
+  Monstre(5)=0 ;Luminosité Monstre
+  Monstre(6)=0 ;Luminosité Monstre
   TempoRepopMonstre(1)=Random(300,50)
   TempoRepopMonstre(2)=Random(300,50)
   TempoRepopMonstre(3)=Random(300,50)
@@ -131,6 +134,9 @@
   Repeat
     ExamineKeyboard()
     ExamineMouse()
+    If EnableJoystick
+      ExamineJoystick(0)
+    EndIf
    
     If Mode=0: Menu():EndIf
     If Mode=1: GAME():EndIf
@@ -144,8 +150,8 @@
 
 
 ;- PROCEDURES
-Procedure Menu()
- If GameLaunch=0
+  Procedure Menu()
+    If GameLaunch=0
       DisplaySprite(31,0,0)
       DisplayTransparentSprite(32,58,54)
       
@@ -202,8 +208,7 @@ Procedure Menu()
       If luneX.f<1024/2 : multi = multi + 1 : EndIf
       If luneX.f>1024/2 : multi = multi - 1 : EndIf
       If luneX.f>1024/2+200 : luneX.f=1024/2-200 : nbNuit+1 :
-   
-   
+
       ;-melange des grimoires
         tirage = Random(5,3)
         precedant1 = tirage
@@ -255,7 +260,7 @@ Procedure Menu()
     DisplayTransparentSprite(21,nuage5.f,300,255)
   
   ;-affiche interface
-  DisplayTransparentSprite(2,0,0) 
+    DisplayTransparentSprite(2,0,0) 
   
   ;-- affichage des grimoires
     DisplayTransparentSprite(Sorts(1),2,2)
@@ -277,12 +282,12 @@ Procedure Menu()
 
   ;-- Gestion de la baguette
     If DirectionKey=0
-      If KeyboardPushed(#PB_Key_Left)
+      If KeyboardPushed(#PB_Key_Left) Or KeyboardPushed(#PB_Key_Q)
         DirectionKey=1
-      ElseIf KeyboardPushed(#PB_Key_Right)
+      ElseIf KeyboardPushed(#PB_Key_Right) Or KeyboardPushed(#PB_Key_D)
         DirectionKey=3
         Angle+10
-      ElseIf KeyboardPushed(#PB_Key_Up)
+      ElseIf KeyboardPushed(#PB_Key_Up) Or KeyboardPushed(#PB_Key_Z)
         DirectionKey=2
       EndIf
     EndIf
@@ -387,10 +392,15 @@ Procedure Menu()
       SpellKey=0
     EndIf
   ;-- getion pv/score/monstre
-;     AffText("TempoPop:"+Str(TempoRepopMonstre(1)),800,70,255)
-;     AffText("LightM1:"+Str(Monstre(4)),800,100,255)
-;     AffText("LightM2:"+Str(Monstre(5)),800,130,255)
-;     AffText("LightM3:"+Str(Monstre(6)),800,160,255)
+    AffText("TempoPop:"+Str(TempoRepopMonstre(1)),800,70,255)
+    AffText("TempoPop:"+Str(TempoRepopMonstre(2)),800,100,255)
+    AffText("TempoPop:"+Str(TempoRepopMonstre(3)),800,130,255)
+    AffText("AffMonstre:"+Str(Monstre(1)),800,160,255)
+    AffText("AffMonstre:"+Str(Monstre(2)),800,190,255)
+    AffText("AffMonstre:"+Str(Monstre(3)),800,220,255)
+    AffText("LightM1:"+Str(Monstre(4)),800,250,255)
+    AffText("LightM2:"+Str(Monstre(5)),800,280,255)
+    AffText("LightM3:"+Str(Monstre(6)),800,310,255)
 
     If Monstre(1)<>0
       Monstre(4)+1
@@ -482,8 +492,7 @@ Procedure Menu()
   EndProcedure
 
 ; IDE Options = PureBasic 5.31 (Windows - x86)
-; CursorPosition = 256
-; FirstLine = 235
+; CursorPosition = 8
 ; Folding = 4
 ; EnableUnicode
 ; EnableXP
