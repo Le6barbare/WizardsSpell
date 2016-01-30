@@ -18,6 +18,7 @@
   Global luneWait=0, luneX.f=1024/2-200, luneY.f=0, initCentrLuneX=1024/2, initCentrLuneY=250, multi, nbnuit = 1
   Global nuage1.f=Random(1024), nuage2.f=Random(1024), nuage3.f=Random(1024), nuage4.f=Random(1024), nuage5.f=Random(1024)
   Global tirage, precedant1, precedant2
+  Global SelectMenu=0,TempoMenu=50,Mode,Quit
 
 ; Tableaux
   Global Dim Sorts(3), Dim PositionEffetSort(6)
@@ -55,21 +56,27 @@
   LoadSprite(11,"Ressources/img/Monstres/monstre-rouge.png",#PB_Sprite_AlphaBlending)
   LoadSprite(12,"Ressources/img/Monstres/monstre-vert2.png",#PB_Sprite_AlphaBlending)
   LoadSprite(13,"Ressources/img/Monstres/monstre-blanc.png",#PB_Sprite_AlphaBlending)
+  
   LoadSprite(21,"Ressources/img/Animation/nuage1.png",#PB_Sprite_AlphaBlending)
   LoadSprite(22,"Ressources/img/Animation/nuage2.png",#PB_Sprite_AlphaBlending)
   LoadSprite(23,"Ressources/img/Animation/montage-eau.png",#PB_Sprite_AlphaBlending)
+  
+  LoadSprite(31,"Ressources/img/TitleScreen/blackBG.png")
+  LoadSprite(32,"Ressources/img/TitleScreen/title.png",#PB_Sprite_AlphaBlending)
+  LoadSprite(33,"Ressources/img/TitleScreen/jouer.png",#PB_Sprite_AlphaBlending)
+  LoadSprite(34,"Ressources/img/TitleScreen/jouer2.png",#PB_Sprite_AlphaBlending)
+  LoadSprite(35,"Ressources/img/TitleScreen/quitter.png",#PB_Sprite_AlphaBlending)
+  LoadSprite(36,"Ressources/img/TitleScreen/quitter2.png",#PB_Sprite_AlphaBlending)
    
   LoadImage(300,"Ressources/img/Animation/flamme2.png",#PB_Sprite_AlphaBlending)
     For j=0 To 4
-      GrabImage(300,1,j*320/5,0, (j+1)*320/5,64)    
+      GrabImage(300,1,j*320/5,0, (j+1)*320/5,64)
       CreateSprite(300+j,320/5,64,#PB_Sprite_AlphaBlending)
-      StartDrawing(SpriteOutput(j+300))   
+      StartDrawing(SpriteOutput(j+300))
       DrawImage(ImageID(1),0,0)
       StopDrawing()
       TransparentSpriteColor(j+300,RGB(0,0,0)) 
     Next
-
-
 
 ;- Chargement Font
   LoadImage(200,"Ressources/img/Font.bmp")        ; Charge l'image de toutes les lettres
@@ -82,13 +89,11 @@
   Next
 
 ; initialisation
-  Mode=1
+  Mode=0
   Score=0
-
   Sorts(1)= 3
   Sorts(2)= 4
   Sorts(3)= 5
-
   PositionEffetSortX=380
   PositionEffetSortY=565
   Monstre(1)=Random(3,1)
@@ -112,7 +117,7 @@
     If Mode=1: GAME():EndIf
   
     FlipBuffers()
-    Until KeyboardPushed(#PB_Key_Escape) Or Quitte = 1
+    Until KeyboardPushed(#PB_Key_Escape) Or Quit = 1
   End
 ;- 
 ;--  END GAME LOOP
@@ -120,7 +125,40 @@
 
 
 ;- PROCEDURES
-
+  Procedure Menu()
+    DisplaySprite(31,0,0)
+    DisplayTransparentSprite(32,58,54)
+    
+    If KeyboardPushed(#PB_Key_Up) Or KeyboardPushed(#PB_Key_Down) Or KeyboardPushed(#PB_Key_Right) Or KeyboardPushed(#PB_Key_Left) Or KeyboardPushed(#PB_Key_Q) Or KeyboardPushed(#PB_Key_S) Or KeyboardPushed(#PB_Key_D) Or KeyboardPushed(#PB_Key_Z)
+      If TempoMenu<=5
+        If SelectMenu=0 : SelectMenu=1 : Else : SelectMenu=0 : EndIf
+        TempoMenu=50
+      EndIf
+    EndIf
+    
+    If TempoMenu>5
+      TempoMenu-2
+    EndIf
+    
+    If SelectMenu=0
+      DisplayTransparentSprite(34,327,295)
+      DisplayTransparentSprite(35,292,424)
+    Else
+      DisplayTransparentSprite(33,327,295)
+      DisplayTransparentSprite(36,292,424)
+    EndIf
+    
+    If KeyboardPushed(#PB_Key_Space) Or KeyboardPushed(#PB_Key_Return)
+      If SelectMenu=0
+        
+        Mode=1
+      Else
+        Quit=1
+      EndIf
+    EndIf
+    
+  EndProcedure
+  
   Procedure GAME()
   
     DisplaySprite(1,0,0)
@@ -387,10 +425,6 @@
     
   EndProcedure
 
-  Procedure Menu()
-    
-  EndProcedure
- 
   Procedure AffText(Text$,x.i,y.i,light.i)
     For j=1 To Len(Text$)                              ; Fait une boucle sur le nombre de caractères à afficher
       a$=Mid(Text$,j,1)                                ; Prends un caractère après l'autre
@@ -402,8 +436,8 @@
   EndProcedure
 
 ; IDE Options = PureBasic 5.31 (Windows - x86)
-; CursorPosition = 74
-; FirstLine = 226
-; Folding = -
+; CursorPosition = 152
+; FirstLine = 129
+; Folding = 8
 ; EnableUnicode
 ; EnableXP
