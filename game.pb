@@ -72,7 +72,7 @@
 
 
 ;- Chargement Font
-  LoadImage(200,"Ressources/img/Font.bmp")              ; Charge l'image de toutes les lettres
+  LoadImage(200,"Ressources/img/Font.bmp")        ; Charge l'image de toutes les lettres
   For j=0 To 125-33                               ; Fait une boucle de toutes les lettres
     GrabImage(200,j,j*16,0,j*16+16,16)            ; Découpe lettre par lettre
     CreateSprite(j+200,16,16)                     ; Crée un sprite pour chaque lettre
@@ -97,9 +97,9 @@
   Monstre(4)=0
   Monstre(5)=0
   Monstre(6)=0
-  TempoRepopMonstre(1)=300
-  TempoRepopMonstre(2)=300
-  TempoRepopMonstre(3)=300
+  TempoRepopMonstre(1)=Random(300,50)
+  TempoRepopMonstre(2)=Random(300,50)
+  TempoRepopMonstre(3)=Random(300,50)
 
 ;-  *********************  
 ;--  START GAME LOOP
@@ -358,29 +358,29 @@
     
     If Monstre(1)=0
       Monstre(4)=0
-      If TempoRepopMonstre(1)>=10 And TempoRepopMonstre(1)<=300
+      If TempoRepopMonstre(1)>=10
         TempoRepopMonstre(1)-1
       ElseIf TempoRepopMonstre(1)<10
         Monstre(1)=Random(3,1)
-        TempoRepopMonstre(1)=300
+        TempoRepopMonstre(1)=Random(300,50)
       EndIf
     EndIf
     If Monstre(2)=0
       Monstre(5)=0
-      If TempoRepopMonstre(2)>=10 And TempoRepopMonstre(2)<=300
+      If TempoRepopMonstre(2)>=10
         TempoRepopMonstre(2)-1
       ElseIf TempoRepopMonstre(2)<10
         Monstre(2)=Random(3,1)
-        TempoRepopMonstre(2)=300
+        TempoRepopMonstre(2)=Random(300,50)
       EndIf
     EndIf
     If Monstre(3)=0
       Monstre(6)=0
-      If TempoRepopMonstre(3)>=10 And TempoRepopMonstre(3)<=300
+      If TempoRepopMonstre(3)>=10
         TempoRepopMonstre(3)-1
       ElseIf TempoRepopMonstre(3)<10
         Monstre(3)=Random(3,1)
-        TempoRepopMonstre(3)=300
+        TempoRepopMonstre(3)=Random(300,50)
       EndIf
     EndIf
     
@@ -402,8 +402,8 @@
   EndProcedure
 
 ; IDE Options = PureBasic 5.31 (Windows - x86)
-; CursorPosition = 334
-; FirstLine = 355
+; CursorPosition = 74
+; FirstLine = 226
 ; Folding = -
 ; EnableUnicode
 ; EnableXP
