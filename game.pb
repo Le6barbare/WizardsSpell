@@ -195,7 +195,6 @@ Procedure Menu()
   
   Procedure GAME()
     DisplaySprite(1,0,0)
-    DisplayTransparentSprite(2,0,0) 
     
   ;--calcul trajectoire lune
     luneWait = luneWait + 1
@@ -254,6 +253,9 @@ Procedure Menu()
     nuage5.f+1/4
     If nuage5.f>1024 : nuage5.f = 0-100 : EndIf
     DisplayTransparentSprite(21,nuage5.f,300,255)
+  
+  ;-affiche interface
+  DisplayTransparentSprite(2,0,0) 
   
   ;-- affichage des grimoires
     DisplayTransparentSprite(Sorts(1),2,2)
@@ -480,8 +482,8 @@ Procedure Menu()
   EndProcedure
 
 ; IDE Options = PureBasic 5.31 (Windows - x86)
-; CursorPosition = 73
-; FirstLine = 51
+; CursorPosition = 256
+; FirstLine = 235
 ; Folding = 4
 ; EnableUnicode
 ; EnableXP
