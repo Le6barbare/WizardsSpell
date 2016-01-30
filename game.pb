@@ -49,12 +49,12 @@ LoadSprite(9,"Ressources/img/Sort/sort-blanc.png",#PB_Sprite_AlphaBlending)
  
 LoadImage(300,"Ressources/img/Animation/flamme2.png",#PB_Sprite_AlphaBlending)
 For j=0 To 4
-  GrabImage(300,1,j*320/5,0, (j+1)*320/5,65)    
-  CreateSprite(300+j,320/5,65,#PB_Sprite_AlphaBlending)
+  GrabImage(300,1,j*320/5,0, (j+1)*320/5,64)    
+  CreateSprite(300+j,320/5,64,#PB_Sprite_AlphaBlending)
     StartDrawing(SpriteOutput(j+300))   
     DrawImage(ImageID(1),0,0)
     StopDrawing()
-    ;TransparentSpriteColor(j+300,RGB(0,0,0)) 
+    TransparentSpriteColor(j+300,RGB(255,255,255)) 
    Next
 
 
@@ -98,7 +98,7 @@ For j=0 To 4
 ;- PROCEDURES
 
   Procedure GAME()
-    DisplaySprite(1,0,0)
+    DisplaySprite(1,0,0) ; 
     DisplaySprite(2,0,0)
     
     DisplaySprite(Sorts(1),2,2)
@@ -194,8 +194,8 @@ For j=0 To 4
     Next
   EndProcedure
 ; IDE Options = PureBasic 5.31 (Windows - x86)
-; CursorPosition = 60
-; FirstLine = 81
+; CursorPosition = 51
+; FirstLine = 42
 ; Folding = -
 ; EnableUnicode
 ; EnableXP
