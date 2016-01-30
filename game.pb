@@ -13,12 +13,13 @@
   UseOGGSoundDecoder() 
 
 ;----- VARIABLES
-  Global i,j,Angle=0,DirectionKey=0,SpellKey=0,TimeSort=3
+  Global i,j,Angle=0,DirectionKey=0,SpellKey=0,TimeSort=3,Score=0,Vie,TempoMonstre
+  Global luneWait=0, luneX.f=1024/2-200, luneY.f=0, initCentrLuneX=1024/2, initCentrLuneY=250, multi
   
-; Tableau
+; Tableaux
   Global Dim Sorts(3), Dim PositionEffetSort(6)
   Global Dim flamAnim(4), Dim flamWaitAnim(4)
-  Global luneWait=0, luneX.f=1024/2-200, luneY.f=0, initCentrLuneX=1024/2, initCentrLuneY=250, multi
+  Global Dim Monstre(6), Dim TempoRepopMonstre(3)
   
 ;- PROCEDURE
   Declare Menu()
@@ -37,21 +38,24 @@
 
 
 ;-Chargement sprite
-LoadSprite(1,"Ressources/img/background-alpha.png")
-LoadSprite(2,"Ressources/img/spells.png")
-LoadSprite(3,"Ressources/img/spellred.png")
-LoadSprite(4,"Ressources/img/spellgreen.png")
-LoadSprite(5,"Ressources/img/spellwhite.png")
-LoadSprite(6,"Ressources/img/baguette.png",#PB_Sprite_AlphaBlending)
-LoadSprite(7,"Ressources/img/Sort/sort-rouge.png",#PB_Sprite_AlphaBlending)
-LoadSprite(8,"Ressources/img/Sort/sort-vert.png",#PB_Sprite_AlphaBlending)
-LoadSprite(9,"Ressources/img/Sort/sort-blanc.png",#PB_Sprite_AlphaBlending)
-LoadSprite(10,"Ressources/img/Lune/lune0.png",#PB_Sprite_AlphaBlending)
- 
-LoadImage(300,"Ressources/img/Animation/flamme2.png",#PB_Sprite_AlphaBlending)
-For j=0 To 4
-  GrabImage(300,1,j*320/5,0, (j+1)*320/5,64)    
-  CreateSprite(300+j,320/5,64,#PB_Sprite_AlphaBlending)
+  LoadSprite(1,"Ressources/img/background-alpha.png")
+  LoadSprite(2,"Ressources/img/spells.png")
+  LoadSprite(3,"Ressources/img/spellred.png")
+  LoadSprite(4,"Ressources/img/spellgreen.png")
+  LoadSprite(5,"Ressources/img/spellwhite.png")
+  LoadSprite(6,"Ressources/img/baguette.png",#PB_Sprite_AlphaBlending)
+  LoadSprite(7,"Ressources/img/Sort/sort-rouge.png",#PB_Sprite_AlphaBlending)
+  LoadSprite(8,"Ressources/img/Sort/sort-vert.png",#PB_Sprite_AlphaBlending)
+  LoadSprite(9,"Ressources/img/Sort/sort-blanc.png",#PB_Sprite_AlphaBlending)
+  LoadSprite(10,"Ressources/img/Lune/lune0.png",#PB_Sprite_AlphaBlending)
+  LoadSprite(11,"Ressources/img/Monstres/monstre-rouge.png",#PB_Sprite_AlphaBlending)
+  LoadSprite(12,"Ressources/img/Monstres/monstre-vert2.png",#PB_Sprite_AlphaBlending)
+  LoadSprite(13,"Ressources/img/Monstres/monstre-blanc.png",#PB_Sprite_AlphaBlending)
+   
+  LoadImage(300,"Ressources/img/Animation/flamme2.png",#PB_Sprite_AlphaBlending)
+  For j=0 To 4
+    GrabImage(300,1,j*320/5,0, (j+1)*320/5,64)    
+    CreateSprite(300+j,320/5,64,#PB_Sprite_AlphaBlending)
     StartDrawing(SpriteOutput(j+300))   
     DrawImage(ImageID(1),0,0)
     StopDrawing()
@@ -72,12 +76,22 @@ For j=0 To 4
 
 ; initialisation
   Mode=1
+  Score=0
   Sorts(1)=3 ;ROUGE
   Sorts(2)=4 ;VERT
   Sorts(3)=5 ;BLANC
   PositionEffetSortX=380
   PositionEffetSortY=565
-  
+  Monstre(1)=Random(3,1)
+  Monstre(2)=Random(3,1)
+  Monstre(3)=Random(3,1)
+  Monstre(4)=0
+  Monstre(5)=0
+  Monstre(6)=0
+  TempoRepopMonstre(1)=300
+  TempoRepopMonstre(2)=300
+  TempoRepopMonstre(3)=300
+
 ;-  *********************  
 ;--  START GAME LOOP
 ;- 
@@ -105,6 +119,17 @@ For j=0 To 4
     DisplaySprite(Sorts(1),2,2)
     DisplaySprite(Sorts(2),78,2)
     DisplaySprite(Sorts(3),154,2)
+    
+    ;-- Affichage Monstres
+    If Monstre(1)<>0
+      DisplayTransparentSprite(Monstre(1)+10,300,400,Monstre(4))
+    EndIf
+    If Monstre(2)<>0
+      DisplayTransparentSprite(Monstre(2)+10,450,400,Monstre(5))
+    EndIf
+    If Monstre(3)<>0
+      DisplayTransparentSprite(Monstre(3)+10,600,400,Monstre(6))
+    EndIf
     
     ;-- Gestion de la baguette
     If DirectionKey=0
@@ -176,6 +201,36 @@ For j=0 To 4
       TimeSort=5
     EndIf
     
+    If SpellKey<>0 And TimeSort=5
+      If Angle=-20 And Monstre(1)<>0
+        If Sorts(SpellKey)=Monstre(1)+2
+          Score+1
+          Monstre(1)=0
+        Else
+          Vie-1
+          Monstre(1)=0
+        EndIf
+      EndIf
+      If Angle=0 And Monstre(2)<>0
+        If Sorts(SpellKey)=Monstre(2)+2
+          Score+1
+          Monstre(2)=0
+        Else
+          Vie-1
+          Monstre(2)=0
+        EndIf
+      EndIf
+      If Angle=20 And Monstre(3)<>0
+        If Sorts(SpellKey)=Monstre(3)+2
+          Score+1
+          Monstre(3)=0
+        Else
+          Vie-1
+          Monstre(3)=0
+        EndIf
+      EndIf
+    EndIf
+    
     If SpellKey<>0 And TimeSort>0 
       If Angle=-20 Or Angle=0 Or Angle=20
         DisplayTransparentSprite(Sorts(SpellKey)+4,PositionEffetSortX,PositionEffetSortY,230)
@@ -199,7 +254,7 @@ For j=0 To 4
     
     
     
-     ;--calcul trajectoire lune*
+    ;--calcul trajectoire lune*
     luneWait = luneWait + 1
     If luneWait>10
       If luneX.f<1024/2 : multi = multi + 1 : EndIf
@@ -211,7 +266,64 @@ For j=0 To 4
     luneY.f = initCentrLuneY-Sqr(200*200-(luneX.f-initCentrLuneX)*(luneX.f-initCentrLuneX))
     DisplayTransparentSprite(10,luneX,luneY,255)
     
+    AffText(Str(Score),800,50,255)
+    AffText(Str(Vie),800,20,255)
     
+    AffText("TempoPop:"+Str(TempoRepopMonstre(1)),800,70,255)
+    AffText("LightM1:"+Str(Monstre(4)),800,100,255)
+    AffText("LightM2:"+Str(Monstre(5)),800,130,255)
+    AffText("LightM3:"+Str(Monstre(6)),800,160,255)
+    
+    If Monstre(1)<>0
+      Monstre(4)+1
+    EndIf
+    If Monstre(2)<>0
+      Monstre(5)+1
+    EndIf
+    If Monstre(3)<>0
+      Monstre(6)+1
+    EndIf
+    
+    If Monstre(4)>=255
+      Monstre(1)=0
+      Monstre(4)=0
+      Vie-1
+    EndIf
+    If Monstre(5)>=255
+      Monstre(2)=0
+      Monstre(5)=0
+      Vie-1
+    EndIf
+    If Monstre(6)>=255
+      Monstre(3)=0
+      Monstre(6)=0
+      Vie-1
+    EndIf
+    
+    If Monstre(1)=0
+      If TempoRepopMonstre(1)>=10 And TempoRepopMonstre(1)<=300
+        TempoRepopMonstre(1)-1
+      ElseIf TempoRepopMonstre(1)<10
+        Monstre(1)=Random(3,1)
+        TempoRepopMonstre(1)=300
+      EndIf
+    EndIf
+    If Monstre(2)=0
+      If TempoRepopMonstre(2)>=10 And TempoRepopMonstre(2)<=300
+        TempoRepopMonstre(2)-1
+      ElseIf TempoRepopMonstre(2)<10
+        Monstre(2)=Random(3,1)
+        TempoRepopMonstre(2)=300
+      EndIf
+    EndIf
+    If Monstre(3)=0
+      If TempoRepopMonstre(3)>=10 And TempoRepopMonstre(3)<=300
+        TempoRepopMonstre(3)-1
+      ElseIf TempoRepopMonstre(3)<10
+        Monstre(3)=Random(3,1)
+        TempoRepopMonstre(3)=300
+      EndIf
+    EndIf
   EndProcedure
 
   Procedure Menu()
@@ -228,8 +340,8 @@ For j=0 To 4
     Next
   EndProcedure
 ; IDE Options = PureBasic 5.31 (Windows - x86)
-; CursorPosition = 20
-; FirstLine = 5
+; CursorPosition = 92
+; FirstLine = 64
 ; Folding = -
 ; EnableUnicode
 ; EnableXP
