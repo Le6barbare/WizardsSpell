@@ -41,6 +41,9 @@ LoadSprite(3,"Ressources/img/spellred.png")
 LoadSprite(4,"Ressources/img/spellgreen.png")
 LoadSprite(5,"Ressources/img/spellwhite.png")
 LoadSprite(6,"Ressources/img/baguette.png",#PB_Sprite_AlphaBlending)
+LoadSprite(7,"Ressources/img/Sort/sort-rouge.png",#PB_Sprite_AlphaBlending)
+LoadSprite(8,"Ressources/img/Sort/sort-vert.png",#PB_Sprite_AlphaBlending)
+LoadSprite(9,"Ressources/img/Sort/sort-blanc.png",#PB_Sprite_AlphaBlending)
 ;LoadSprite(1,"Ressources/img/space2.png",#PB_Sprite_AlphaBlending)
 ;TransparentSpriteColor(2, RGB(255, 0, 255)) 
   
@@ -113,6 +116,16 @@ Next
     RotateSprite(6,Angle,0)
     DisplayTransparentSprite(6,300,600,255)
     
+    If KeyboardPushed(#PB_Key_K)
+      DisplayTransparentSprite(7,515,565,230) 
+    ElseIf KeyboardPushed(#PB_Key_L)
+      DisplayTransparentSprite(8,380,565,230)
+    ElseIf KeyboardPushed(#PB_Key_M)
+      DisplayTransparentSprite(9,450,555,230)
+    EndIf
+    
+    
+    
     For j=0 To 21
       lunewaitAnim(j)+1
       If lunewaitAnim(j)>10
@@ -138,8 +151,8 @@ Next
     Next
   EndProcedure
 ; IDE Options = PureBasic 5.31 (Windows - x86)
-; CursorPosition = 122
-; FirstLine = 106
+; CursorPosition = 119
+; FirstLine = 98
 ; Folding = -
 ; EnableUnicode
 ; EnableXP
