@@ -14,11 +14,12 @@
 
 ;----- VARIABLES
   Global i,j,Angle=0,DirectionKey=0,SpellKey=0,TimeSort=3
+  Global tirage, precedant1, precedant2
   
 ; Tableau
   Global Dim Sorts(3), Dim PositionEffetSort(6)
   Global Dim flamAnim(4), Dim flamWaitAnim(4)
-  Global luneWait=0, luneX.f=1024/2-200, luneY.f=0, initCentrLuneX=1024/2, initCentrLuneY=250, multi
+  Global luneWait=0, luneX.f=1024/2-200, luneY.f=0, initCentrLuneX=1024/2, initCentrLuneY=250, multi, nbnuit = 1
   Global nuage1.f=Random(1024), nuage2.f=Random(1024), nuage3.f=Random(1024), nuage4.f=Random(1024), nuage5.f=Random(1024)
   
 ;- PROCEDURE
@@ -39,10 +40,10 @@
 
 ;-Chargement sprite
 LoadSprite(1,"Ressources/img/background-alpha.png")
-LoadSprite(2,"Ressources/img/spells.png")
-LoadSprite(3,"Ressources/img/spellred.png")
-LoadSprite(4,"Ressources/img/spellgreen.png")
-LoadSprite(5,"Ressources/img/spellwhite.png")
+LoadSprite(2,"Ressources/img/HUB/Interface.png",#PB_Sprite_AlphaBlending)
+LoadSprite(3,"Ressources/img/Sort/livre-blanc.png",#PB_Sprite_AlphaBlending)
+LoadSprite(4,"Ressources/img/Sort/livre-rouge.png",#PB_Sprite_AlphaBlending)
+LoadSprite(5,"Ressources/img/Sort/livre-vert.png",#PB_Sprite_AlphaBlending)
 LoadSprite(6,"Ressources/img/baguette.png",#PB_Sprite_AlphaBlending)
 LoadSprite(7,"Ressources/img/Sort/sort-rouge.png",#PB_Sprite_AlphaBlending)
 LoadSprite(8,"Ressources/img/Sort/sort-vert.png",#PB_Sprite_AlphaBlending)
@@ -76,9 +77,12 @@ For j=0 To 4
 
 ; initialisation
   Mode=1
-  Sorts(1)=3 ;ROUGE
-  Sorts(2)=4 ;VERT
-  Sorts(3)=5 ;BLANC
+  
+  Sorts(1)= 3
+  Sorts(2)= 4
+  Sorts(3)= 5
+ 
+  
   PositionEffetSortX=380
   PositionEffetSortY=565
   
@@ -103,13 +107,10 @@ For j=0 To 4
 ;- PROCEDURES
 
   Procedure GAME()
+  
     DisplaySprite(1,0,0)
-    DisplaySprite(2,0,0)
-    
-    DisplaySprite(Sorts(1),2,2)
-    DisplaySprite(Sorts(2),78,2)
-    DisplaySprite(Sorts(3),154,2)
-    
+     DisplayTransparentSprite(2,0,0)
+ 
     ;-- Gestion de la baguette
     If DirectionKey=0
       If KeyboardPushed(#PB_Key_Left)
@@ -208,7 +209,24 @@ For j=0 To 4
     If luneWait>10
       If luneX.f<1024/2 : multi = multi + 1 : EndIf
       If luneX.f>1024/2 : multi = multi - 1 : EndIf
-      If luneX.f>1024/2+200 : multi = 0 : EndIf
+      If luneX.f>1024/2+200 : luneX.f=1024/2-200 : nbNuit+1 :
+   
+      tirage = Random(5,3)
+      precedant1 = tirage
+      Sorts(1) = tirage
+      tirage = Random(5,3)
+      While tirage = precedant1
+        tirage = Random(5,3)
+      Wend
+      precedant2 = tirage
+      Sorts(2) = tirage
+      tirage = Random(5,3)
+      While tirage = precedant2 Or tirage = precedant1
+        tirage = Random(5,3)
+      Wend
+      Sorts(3) = tirage
+
+    EndIf
       luneX.f = luneX.f + multi/30
       luneWait=0
     EndIf
@@ -216,26 +234,39 @@ For j=0 To 4
     DisplayTransparentSprite(10,luneX,luneY,255)
     DisplayTransparentSprite(23,2,274,255)
     
-   ;-- trajectoire nuages 
-   nuage1.f+1/5
-   If nuage1.f>1024 : nuage1.f = 0-100 : EndIf
-   DisplayTransparentSprite(21,nuage1.f,100,255)
+  ;-- calcul nb nuit
+  
+  AffText("Nuit "+ Str(nbNuit),815,5,255)
+    
+    
+  ;-- trajectoire nuages 
+    nuage1.f+1/5
+    If nuage1.f>1024 : nuage1.f = 0-100 : EndIf
+    DisplayTransparentSprite(21,nuage1.f,100,255)
    
-   nuage2.f+1/3
-   If nuage2.f>1024 : nuage2.f = 0-100 : EndIf
-   DisplayTransparentSprite(22,nuage2.f,150,255)
+    nuage2.f+1/3
+    If nuage2.f>1024 : nuage2.f = 0-100 : EndIf
+    DisplayTransparentSprite(22,nuage2.f,150,255)
    
-   nuage3.f+1/8
-   If nuage3>1024 : nuage3.f = 0-100 : EndIf
-   DisplayTransparentSprite(21,nuage3.f,200,255)
+    nuage3.f+1/8
+    If nuage3>1024 : nuage3.f = 0-100 : EndIf
+    DisplayTransparentSprite(21,nuage3.f,200,255)
    
-   nuage4.f+1/2
-   If nuage4.f>1024 : nuage4.f = 0-100 : EndIf
-   DisplayTransparentSprite(22,nuage4.f,250,255)
+    nuage4.f+1/2
+    If nuage4.f>1024 : nuage4.f = 0-100 : EndIf
+    DisplayTransparentSprite(22,nuage4.f,250,255)
    
-   nuage5.f+1/4
-   If nuage5.f>1024 : nuage5.f = 0-100 : EndIf
-   DisplayTransparentSprite(21,nuage5.f,300,255)
+    nuage5.f+1/4
+    If nuage5.f>1024 : nuage5.f = 0-100 : EndIf
+    DisplayTransparentSprite(21,nuage5.f,300,255)
+  
+  ;-- code des grimoires
+   
+
+  
+    DisplayTransparentSprite(Sorts(1),2,2)
+    DisplayTransparentSprite(Sorts(2),110,2)
+    DisplayTransparentSprite(Sorts(3),210,2)
     
   EndProcedure
 
@@ -253,7 +284,7 @@ For j=0 To 4
     Next
   EndProcedure
 ; IDE Options = PureBasic 5.31 (Windows - x86)
-; CursorPosition = 216
+; CursorPosition = 228
 ; FirstLine = 204
 ; Folding = -
 ; EnableUnicode
