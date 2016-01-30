@@ -18,6 +18,7 @@
 ; Tableau
   Global Dim luneAnim(21), Dim lunewaitAnim(21)
   Global Dim Sorts(3), Dim PositionEffetSort(6)
+  Global Dim  flamAnim(4), Dim flamWaitAnim(4)
   
 ;- PROCEDURE
   Declare Menu()
@@ -45,19 +46,25 @@ LoadSprite(6,"Ressources/img/baguette.png",#PB_Sprite_AlphaBlending)
 LoadSprite(7,"Ressources/img/Sort/sort-rouge.png",#PB_Sprite_AlphaBlending)
 LoadSprite(8,"Ressources/img/Sort/sort-vert.png",#PB_Sprite_AlphaBlending)
 LoadSprite(9,"Ressources/img/Sort/sort-blanc.png",#PB_Sprite_AlphaBlending)
-;LoadSprite(1,"Ressources/img/space2.png",#PB_Sprite_AlphaBlending)
-;TransparentSpriteColor(2, RGB(255, 0, 255)) 
-  
-For i=0 To 21
-  LoadSprite(50+i,"Ressources/img/Lune/lune"+Str(i)+".png",#PB_Sprite_AlphaBlending)
-Next
+
+ 
+LoadImage(300,"Ressources/img/Animation/flamme2.png",#PB_Sprite_AlphaBlending)
+For j=0 To 4
+  GrabImage(300,1,j*320/5,0, (j+1)*320/5,65)    
+  CreateSprite(300+j,320/5,65,#PB_Sprite_AlphaBlending)
+    StartDrawing(SpriteOutput(j+300))   
+    DrawImage(ImageID(1),0,0)
+    StopDrawing()
+    ;TransparentSpriteColor(j+300,RGB(0,0,0)) 
+   Next
+
 
 
 ;- Chargement Font
   LoadImage(200,"Ressources/img/Font.bmp")              ; Charge l'image de toutes les lettres
   For j=0 To 125-33                               ; Fait une boucle de toutes les lettres
     GrabImage(200,j,j*16,0,j*16+16,16)            ; Découpe lettre par lettre
-    CreateSprite(j+200,16,16)  ; Crée un sprite pour chaque lettre
+    CreateSprite(j+200,16,16)                     ; Crée un sprite pour chaque lettre
     StartDrawing(SpriteOutput(j+200))
       DrawImage(ImageID(j),0,0)                   ; Place la lettre découpée dans le sprite
       StopDrawing()
@@ -162,17 +169,16 @@ Next
       DisplayTransparentSprite(Sorts(3)+4,PositionEffetSortX,PositionEffetSortY,230)
     EndIf
     
-    
-    
-    For j=0 To 21
-      lunewaitAnim(j)+1
-      If lunewaitAnim(j)>10
-         lunewaitAnim(j)=0
-         luneAnim(j)+1
-         If luneAnim(j)>21 :  luneAnim(j)=0 : EndIf
+    For j=0 To 4
+      flamWaitAnim(j)+1
+      If flamWaitAnim(j)>5
+        flamWaitAnim(j)=0
+        flamAnim(j)+1
+        If flamAnim(j)>4 :  flamAnim(j)=0 : EndIf
       EndIf
-      DisplayTransparentSprite(50+luneAnim(j),200,200,250)   
-    Next
+      DisplayTransparentSprite(300+flamAnim(j),200,400,255)  
+    Next 
+    
   EndProcedure
 
   Procedure Menu()
@@ -189,8 +195,8 @@ Next
     Next
   EndProcedure
 ; IDE Options = PureBasic 5.31 (Windows - x86)
-; CursorPosition = 143
-; FirstLine = 127
+; CursorPosition = 53
+; FirstLine = 36
 ; Folding = -
 ; EnableUnicode
 ; EnableXP
