@@ -13,23 +13,17 @@
   UseOGGSoundDecoder() 
 
 ;----- VARIABLES
-<<<<<<< HEAD
+
   Global i,j,Angle=0,DirectionKey=0,SpellKey=0,TimeSort=3,Score=0,Vie,TempoMonstre
-  Global luneWait=0, luneX.f=1024/2-200, luneY.f=0, initCentrLuneX=1024/2, initCentrLuneY=250, multi
-=======
-  Global i,j,Angle=0,DirectionKey=0,SpellKey=0,TimeSort=3
+  Global luneWait=0, luneX.f=1024/2-200, luneY.f=0, initCentrLuneX=1024/2, initCentrLuneY=250, multi, nbnuit = 1
+  Global nuage1.f=Random(1024), nuage2.f=Random(1024), nuage3.f=Random(1024), nuage4.f=Random(1024), nuage5.f=Random(1024)
   Global tirage, precedant1, precedant2
->>>>>>> origin/master
-  
+
 ; Tableaux
   Global Dim Sorts(3), Dim PositionEffetSort(6)
   Global Dim flamAnim(4), Dim flamWaitAnim(4)
-<<<<<<< HEAD
   Global Dim Monstre(6), Dim TempoRepopMonstre(3)
-=======
-  Global luneWait=0, luneX.f=1024/2-200, luneY.f=0, initCentrLuneX=1024/2, initCentrLuneY=250, multi, nbnuit = 1
-  Global nuage1.f=Random(1024), nuage2.f=Random(1024), nuage3.f=Random(1024), nuage4.f=Random(1024), nuage5.f=Random(1024)
->>>>>>> origin/master
+
   
 ;- PROCEDURE
   Declare Menu()
@@ -48,12 +42,12 @@
 
 
 ;-Chargement sprite
-<<<<<<< HEAD
+
   LoadSprite(1,"Ressources/img/background-alpha.png")
-  LoadSprite(2,"Ressources/img/spells.png")
-  LoadSprite(3,"Ressources/img/spellred.png")
-  LoadSprite(4,"Ressources/img/spellgreen.png")
-  LoadSprite(5,"Ressources/img/spellwhite.png")
+  LoadSprite(2,"Ressources/img/HUB/Interface.png",#PB_Sprite_AlphaBlending)
+  LoadSprite(3,"Ressources/img/Sort/livre-rouge.png",#PB_Sprite_AlphaBlending)
+  LoadSprite(4,"Ressources/img/Sort/livre-vert.png",#PB_Sprite_AlphaBlending)
+  LoadSprite(5,"Ressources/img/Sort/livre-blanc.png",#PB_Sprite_AlphaBlending)
   LoadSprite(6,"Ressources/img/baguette.png",#PB_Sprite_AlphaBlending)
   LoadSprite(7,"Ressources/img/Sort/sort-rouge.png",#PB_Sprite_AlphaBlending)
   LoadSprite(8,"Ressources/img/Sort/sort-vert.png",#PB_Sprite_AlphaBlending)
@@ -62,36 +56,19 @@
   LoadSprite(11,"Ressources/img/Monstres/monstre-rouge.png",#PB_Sprite_AlphaBlending)
   LoadSprite(12,"Ressources/img/Monstres/monstre-vert2.png",#PB_Sprite_AlphaBlending)
   LoadSprite(13,"Ressources/img/Monstres/monstre-blanc.png",#PB_Sprite_AlphaBlending)
+  LoadSprite(21,"Ressources/img/Animation/nuage1.png",#PB_Sprite_AlphaBlending)
+  LoadSprite(22,"Ressources/img/Animation/nuage2.png",#PB_Sprite_AlphaBlending)
+  LoadSprite(23,"Ressources/img/Animation/montage-eau.png",#PB_Sprite_AlphaBlending)
    
   LoadImage(300,"Ressources/img/Animation/flamme2.png",#PB_Sprite_AlphaBlending)
-  For j=0 To 4
-    GrabImage(300,1,j*320/5,0, (j+1)*320/5,64)    
-    CreateSprite(300+j,320/5,64,#PB_Sprite_AlphaBlending)
-=======
-LoadSprite(1,"Ressources/img/background-alpha.png")
-LoadSprite(2,"Ressources/img/HUB/Interface.png",#PB_Sprite_AlphaBlending)
-LoadSprite(3,"Ressources/img/Sort/livre-rouge.png",#PB_Sprite_AlphaBlending)
-LoadSprite(4,"Ressources/img/Sort/livre-vert.png",#PB_Sprite_AlphaBlending)
-LoadSprite(5,"Ressources/img/Sort/livre-blanc.png",#PB_Sprite_AlphaBlending)
-LoadSprite(6,"Ressources/img/baguette.png",#PB_Sprite_AlphaBlending)
-LoadSprite(7,"Ressources/img/Sort/sort-rouge.png",#PB_Sprite_AlphaBlending)
-LoadSprite(8,"Ressources/img/Sort/sort-vert.png",#PB_Sprite_AlphaBlending)
-LoadSprite(9,"Ressources/img/Sort/sort-blanc.png",#PB_Sprite_AlphaBlending)
-LoadSprite(10,"Ressources/img/Lune/lune0.png",#PB_Sprite_AlphaBlending)
-LoadSprite(21,"Ressources/img/Animation/nuage1.png",#PB_Sprite_AlphaBlending)
-LoadSprite(22,"Ressources/img/Animation/nuage2.png",#PB_Sprite_AlphaBlending)
-LoadSprite(23,"Ressources/img/Animation/montage-eau.png",#PB_Sprite_AlphaBlending)
- 
-LoadImage(300,"Ressources/img/Animation/flamme2.png",#PB_Sprite_AlphaBlending)
-For j=0 To 4
-  GrabImage(300,1,j*320/5,0, (j+1)*320/5,64)    
-  CreateSprite(300+j,320/5,64,#PB_Sprite_AlphaBlending)
->>>>>>> origin/master
-    StartDrawing(SpriteOutput(j+300))   
-    DrawImage(ImageID(1),0,0)
-    StopDrawing()
-    TransparentSpriteColor(j+300,RGB(0,0,0)) 
-   Next
+    For j=0 To 4
+      GrabImage(300,1,j*320/5,0, (j+1)*320/5,64)    
+      CreateSprite(300+j,320/5,64,#PB_Sprite_AlphaBlending)
+      StartDrawing(SpriteOutput(j+300))   
+      DrawImage(ImageID(1),0,0)
+      StopDrawing()
+      TransparentSpriteColor(j+300,RGB(0,0,0)) 
+    Next
 
 
 
@@ -107,19 +84,12 @@ For j=0 To 4
 
 ; initialisation
   Mode=1
-<<<<<<< HEAD
   Score=0
-  Sorts(1)=3 ;ROUGE
-  Sorts(2)=4 ;VERT
-  Sorts(3)=5 ;BLANC
-=======
-  
+
   Sorts(1)= 3
   Sorts(2)= 4
   Sorts(3)= 5
- 
-  
->>>>>>> origin/master
+
   PositionEffetSortX=380
   PositionEffetSortY=565
   Monstre(1)=Random(3,1)
@@ -155,14 +125,10 @@ For j=0 To 4
   Procedure GAME()
   
     DisplaySprite(1,0,0)
-<<<<<<< HEAD
-    DisplaySprite(2,0,0)
+    DisplayTransparentSprite(2,0,0)
+
     
-    DisplaySprite(Sorts(1),2,2)
-    DisplaySprite(Sorts(2),78,2)
-    DisplaySprite(Sorts(3),154,2)
-    
-    ;-- Affichage Monstres
+;-affichage des monstres
     If Monstre(1)<>0
       DisplayTransparentSprite(Monstre(1)+10,300,400,Monstre(4))
     EndIf
@@ -172,11 +138,10 @@ For j=0 To 4
     If Monstre(3)<>0
       DisplayTransparentSprite(Monstre(3)+10,600,400,Monstre(6))
     EndIf
-    
-=======
+
      DisplayTransparentSprite(2,0,0)
  
->>>>>>> origin/master
+
     ;-- Gestion de la baguette
     If DirectionKey=0
       If KeyboardPushed(#PB_Key_Left)
@@ -247,7 +212,6 @@ For j=0 To 4
       TimeSort=5
     EndIf
     
-<<<<<<< HEAD
     If SpellKey<>0 And TimeSort=5
       If Angle=-20 And Monstre(1)<>0
         If Sorts(SpellKey)=Monstre(1)+2
@@ -278,12 +242,10 @@ For j=0 To 4
       EndIf
     EndIf
     
-=======
     
     
     
    ;-utilisation des spell
->>>>>>> origin/master
     If SpellKey<>0 And TimeSort>0 
       If Angle=-20 Or Angle=0 Or Angle=20
         DisplayTransparentSprite(Sorts(SpellKey)+4,PositionEffetSortX,PositionEffetSortY,230)
@@ -307,15 +269,9 @@ For j=0 To 4
     
     
     
-<<<<<<< HEAD
-<<<<<<< HEAD
-    ;--calcul trajectoire lune*
-=======
-  ;--calcul trajectoire lune*
->>>>>>> origin/master
-=======
+
   ;--calcul trajectoire lune
->>>>>>> origin/master
+
     luneWait = luneWait + 1
     If luneWait>10
       If luneX.f<1024/2 : multi = multi + 1 : EndIf
@@ -346,22 +302,12 @@ For j=0 To 4
     luneY.f = initCentrLuneY-Sqr(200*200-(luneX.f-initCentrLuneX)*(luneX.f-initCentrLuneX)) 
     DisplayTransparentSprite(10,luneX,luneY,255)
     DisplayTransparentSprite(23,2,274,255)
-    
-<<<<<<< HEAD
-<<<<<<< HEAD
-    AffText(Str(Score),800,50,255)
-    AffText(Str(Vie),800,20,255)
-=======
-=======
-    
-    
-    
-    
->>>>>>> origin/master
-  ;-- calcul nb nuit
-  
-  AffText("Nuit "+ Str(nbNuit),815,5,255)
-    
+
+
+  ;-info text  interface
+    AffText("Score " + Str(Score),800,50,255)
+    AffText("vie " + Str(Vie),800,20,255)
+    AffText("Nuit "+ Str(nbNuit),815,5,255)
     
   ;-- trajectoire nuages 
     nuage1.f+1/5
@@ -388,12 +334,11 @@ For j=0 To 4
     DisplayTransparentSprite(Sorts(1),2,2)
     DisplayTransparentSprite(Sorts(2),110,2)
     DisplayTransparentSprite(Sorts(3),210,2)
->>>>>>> origin/master
     
-    AffText("TempoPop:"+Str(TempoRepopMonstre(1)),800,70,255)
-    AffText("LightM1:"+Str(Monstre(4)),800,100,255)
-    AffText("LightM2:"+Str(Monstre(5)),800,130,255)
-    AffText("LightM3:"+Str(Monstre(6)),800,160,255)
+  ;  AffText("TempoPop:"+Str(TempoRepopMonstre(1)),800,70,255)
+  ;  AffText("LightM1:"+Str(Monstre(4)),800,100,255)
+  ;  AffText("LightM2:"+Str(Monstre(5)),800,130,255)
+  ;  AffText("LightM3:"+Str(Monstre(6)),800,160,255)
     
     If Monstre(1)<>0
       Monstre(4)+1
@@ -445,6 +390,8 @@ For j=0 To 4
         TempoRepopMonstre(3)=300
       EndIf
     EndIf
+    
+    
   EndProcedure
 
   Procedure Menu()
@@ -460,19 +407,10 @@ For j=0 To 4
       EndIf
     Next
   EndProcedure
+
 ; IDE Options = PureBasic 5.31 (Windows - x86)
-<<<<<<< HEAD
-<<<<<<< HEAD
-; CursorPosition = 92
-; FirstLine = 64
-=======
-; CursorPosition = 228
-; FirstLine = 204
->>>>>>> origin/master
-=======
-; CursorPosition = 44
-; FirstLine = 37
->>>>>>> origin/master
+; CursorPosition = 127
+; FirstLine = 105
 ; Folding = -
 ; EnableUnicode
 ; EnableXP
