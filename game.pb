@@ -19,6 +19,7 @@
   Global Dim Sorts(3), Dim PositionEffetSort(6)
   Global Dim flamAnim(4), Dim flamWaitAnim(4)
   Global luneWait=0, luneX.f=1024/2-200, luneY.f=0, initCentrLuneX=1024/2, initCentrLuneY=250, multi
+  Global nuage1.f=Random(1024), nuage2.f=Random(1024), nuage3.f=Random(1024), nuage4.f=Random(1024), nuage5.f=Random(1024)
   
 ;- PROCEDURE
   Declare Menu()
@@ -47,6 +48,9 @@ LoadSprite(7,"Ressources/img/Sort/sort-rouge.png",#PB_Sprite_AlphaBlending)
 LoadSprite(8,"Ressources/img/Sort/sort-vert.png",#PB_Sprite_AlphaBlending)
 LoadSprite(9,"Ressources/img/Sort/sort-blanc.png",#PB_Sprite_AlphaBlending)
 LoadSprite(10,"Ressources/img/Lune/lune0.png",#PB_Sprite_AlphaBlending)
+LoadSprite(21,"Ressources/img/Animation/nuage1.png",#PB_Sprite_AlphaBlending)
+LoadSprite(22,"Ressources/img/Animation/nuage2.png",#PB_Sprite_AlphaBlending)
+LoadSprite(23,"Ressources/img/Animation/nuage2.png",#PB_Sprite_AlphaBlending)
  
 LoadImage(300,"Ressources/img/Animation/flamme2.png",#PB_Sprite_AlphaBlending)
 For j=0 To 4
@@ -199,7 +203,7 @@ For j=0 To 4
     
     
     
-     ;--calcul trajectoire lune*
+  ;--calcul trajectoire lune*
     luneWait = luneWait + 1
     If luneWait>10
       If luneX.f<1024/2 : multi = multi + 1 : EndIf
@@ -211,6 +215,27 @@ For j=0 To 4
     luneY.f = initCentrLuneY-Sqr(200*200-(luneX.f-initCentrLuneX)*(luneX.f-initCentrLuneX))
     DisplayTransparentSprite(10,luneX,luneY,255)
     
+   ;-- trajectoire nuages 
+   nuage1.f+1/5
+   If nuage1.f>1024 : nuage1.f = 0-100 : EndIf
+   DisplayTransparentSprite(21,nuage1.f,100,255)
+   
+   nuage2.f+1/3
+   If nuage2.f>1024 : nuage2.f = 0-100 : EndIf
+   DisplayTransparentSprite(22,nuage2.f,150,255)
+   
+   nuage3.f+1/8
+   If nuage3>1024 : nuage3.f = 0-100 : EndIf
+   DisplayTransparentSprite(21,nuage3.f,200,255)
+   
+   nuage4.f+1/2
+   If nuage4.f>1024 : nuage4.f = 0-100 : EndIf
+   DisplayTransparentSprite(22,nuage4.f,250,255)
+   
+   nuage5.f+1/4
+   If nuage5.f>1024 : nuage5.f = 0-100 : EndIf
+   DisplayTransparentSprite(21,nuage5.f,300,255)
+
     
   EndProcedure
 
@@ -228,8 +253,8 @@ For j=0 To 4
     Next
   EndProcedure
 ; IDE Options = PureBasic 5.31 (Windows - x86)
-; CursorPosition = 20
-; FirstLine = 5
+; CursorPosition = 236
+; FirstLine = 215
 ; Folding = -
 ; EnableUnicode
 ; EnableXP
