@@ -18,13 +18,13 @@ $RECYCLE.BIN/
 *.lnk
 
 # Ressources non libre
-*.png
 *.jpg
 *.bmp
 *.gif
 *.mp3
 *.wav
-*.ogg
+*.svg
+*.aiff
 
 # =========================
 # Operating System Files
