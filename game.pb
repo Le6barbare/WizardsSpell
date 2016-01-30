@@ -242,8 +242,7 @@
       EndIf
     EndIf
     
-    
-    
+  
     
    ;-utilisation des spell
     If SpellKey<>0 And TimeSort>0 
@@ -257,6 +256,9 @@
       SpellKey=0
     EndIf
     
+    
+  ;-affichage du feu
+  
     For j=0 To 4
       flamWaitAnim(j)+1
       If flamWaitAnim(j)>5
@@ -264,11 +266,9 @@
         flamAnim(j)+1
         If flamAnim(j)>4 :  flamAnim(j)=0 : EndIf
       EndIf
-      DisplayTransparentSprite(300+flamAnim(j),200,400,255)  
+      DisplayTransparentSprite(300+flamAnim(j),800,600,255)  
     Next 
-    
-    
-    
+  
 
   ;--calcul trajectoire lune
 
@@ -334,7 +334,11 @@
     DisplayTransparentSprite(Sorts(1),2,2)
     DisplayTransparentSprite(Sorts(2),110,2)
     DisplayTransparentSprite(Sorts(3),210,2)
-    
+   
+   
+   
+  ;-- getion pv/score/monstre
+     
   ;  AffText("TempoPop:"+Str(TempoRepopMonstre(1)),800,70,255)
   ;  AffText("LightM1:"+Str(Monstre(4)),800,100,255)
   ;  AffText("LightM2:"+Str(Monstre(5)),800,130,255)
@@ -409,8 +413,8 @@
   EndProcedure
 
 ; IDE Options = PureBasic 5.31 (Windows - x86)
-; CursorPosition = 127
-; FirstLine = 105
+; CursorPosition = 357
+; FirstLine = 346
 ; Folding = -
 ; EnableUnicode
 ; EnableXP
