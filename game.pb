@@ -334,6 +334,7 @@
     DisplayTransparentSprite(Sorts(1),2,2)
     DisplayTransparentSprite(Sorts(2),110,2)
     DisplayTransparentSprite(Sorts(3),210,2)
+
    
    
    
@@ -343,6 +344,7 @@
   ;  AffText("LightM1:"+Str(Monstre(4)),800,100,255)
   ;  AffText("LightM2:"+Str(Monstre(5)),800,130,255)
   ;  AffText("LightM3:"+Str(Monstre(6)),800,160,255)
+
     
     If Monstre(1)<>0
       Monstre(4)+1
@@ -356,21 +358,19 @@
     
     If Monstre(4)>=255
       Monstre(1)=0
-      Monstre(4)=0
       Vie-1
     EndIf
     If Monstre(5)>=255
       Monstre(2)=0
-      Monstre(5)=0
       Vie-1
     EndIf
     If Monstre(6)>=255
       Monstre(3)=0
-      Monstre(6)=0
       Vie-1
     EndIf
     
     If Monstre(1)=0
+      Monstre(4)=0
       If TempoRepopMonstre(1)>=10 And TempoRepopMonstre(1)<=300
         TempoRepopMonstre(1)-1
       ElseIf TempoRepopMonstre(1)<10
@@ -379,6 +379,7 @@
       EndIf
     EndIf
     If Monstre(2)=0
+      Monstre(5)=0
       If TempoRepopMonstre(2)>=10 And TempoRepopMonstre(2)<=300
         TempoRepopMonstre(2)-1
       ElseIf TempoRepopMonstre(2)<10
@@ -387,6 +388,7 @@
       EndIf
     EndIf
     If Monstre(3)=0
+      Monstre(6)=0
       If TempoRepopMonstre(3)>=10 And TempoRepopMonstre(3)<=300
         TempoRepopMonstre(3)-1
       ElseIf TempoRepopMonstre(3)<10
@@ -413,8 +415,8 @@
   EndProcedure
 
 ; IDE Options = PureBasic 5.31 (Windows - x86)
-; CursorPosition = 357
-; FirstLine = 346
+; CursorPosition = 415
+; FirstLine = 384
 ; Folding = -
 ; EnableUnicode
 ; EnableXP
