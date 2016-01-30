@@ -13,12 +13,12 @@
   UseOGGSoundDecoder() 
 
 ;----- VARIABLES
-  Global i,j,Angle=0,DirectionKey=0
+  Global i,j,Angle=0,DirectionKey=0,SpellKey=0,TimeSort=3
   
 ; Tableau
   Global Dim luneAnim(21), Dim lunewaitAnim(21)
   Global Dim Sorts(3), Dim PositionEffetSort(6)
-  Global Dim  flamAnim(4), Dim flamWaitAnim(4)
+  Global Dim flamAnim(4), Dim flamWaitAnim(4)
   
 ;- PROCEDURE
   Declare Menu()
@@ -54,7 +54,7 @@ For j=0 To 4
     StartDrawing(SpriteOutput(j+300))   
     DrawImage(ImageID(1),0,0)
     StopDrawing()
-    TransparentSpriteColor(j+300,RGB(255,255,255)) 
+    TransparentSpriteColor(j+300,RGB(0,0,0)) 
    Next
 
 
@@ -98,7 +98,7 @@ For j=0 To 4
 ;- PROCEDURES
 
   Procedure GAME()
-    DisplaySprite(1,0,0) ; 
+    DisplaySprite(1,0,0)
     DisplaySprite(2,0,0)
     
     DisplaySprite(Sorts(1),2,2)
@@ -144,28 +144,46 @@ For j=0 To 4
       EndIf
     EndIf
     
-    If Angle=0
-      PositionEffetSortX=450
-      PositionEffetSortY=555
-    ElseIf Angle=20
-      Angle=20
-      PositionEffetSortX=515
-      PositionEffetSortY=565
-    ElseIf Angle=-20
+    ;-- Gestion Sorts
+    ; Coordonées affichage sort
+    If Angle=-20 ; Baguette a gauche
       Angle=-20
+      PositionEffetSortX=317
+      PositionEffetSortY=497
+    ElseIf Angle=0 ; Baguette au centre
       PositionEffetSortX=385
-      PositionEffetSortY=565
+      PositionEffetSortY=485
+    ElseIf Angle=20 ; Baguette a droite
+      Angle=20
+      PositionEffetSortX=452
+      PositionEffetSortY=497
     EndIf
     
+    ; Rotation et affichage
     RotateSprite(6,Angle,0)
     DisplayTransparentSprite(6,300,600,255)
     
-    If KeyboardPushed(#PB_Key_K)
-      DisplayTransparentSprite(Sorts(1)+4,PositionEffetSortX,PositionEffetSortY,230)
-    ElseIf KeyboardPushed(#PB_Key_L)
-      DisplayTransparentSprite(Sorts(2)+4,PositionEffetSortX,PositionEffetSortY,230)
-    ElseIf KeyboardPushed(#PB_Key_M)
-      DisplayTransparentSprite(Sorts(3)+4,PositionEffetSortX,PositionEffetSortY,230)
+    ; Affichage Sort
+    If KeyboardPushed(#PB_Key_K) And SpellKey=0
+      SpellKey=1
+      TimeSort=5
+    ElseIf KeyboardPushed(#PB_Key_L) And SpellKey=0
+      SpellKey=2
+      TimeSort=5
+    ElseIf KeyboardPushed(#PB_Key_M) And SpellKey=0
+      SpellKey=3
+      TimeSort=5
+    EndIf
+    
+    If SpellKey<>0 And TimeSort>0 
+      If Angle=-20 Or Angle=0 Or Angle=20
+        DisplayTransparentSprite(Sorts(SpellKey)+4,PositionEffetSortX,PositionEffetSortY,230)
+        TimeSort-1
+      EndIf
+    EndIf
+    
+    If KeyboardReleased(#PB_Key_K) Or KeyboardReleased(#PB_Key_L) Or KeyboardReleased(#PB_Key_M)
+      SpellKey=0
     EndIf
     
     For j=0 To 4
@@ -194,8 +212,8 @@ For j=0 To 4
     Next
   EndProcedure
 ; IDE Options = PureBasic 5.31 (Windows - x86)
-; CursorPosition = 51
-; FirstLine = 42
+; CursorPosition = 180
+; FirstLine = 154
 ; Folding = -
 ; EnableUnicode
 ; EnableXP
