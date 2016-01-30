@@ -13,10 +13,11 @@
   UseOGGSoundDecoder() 
 
 ;----- VARIABLES
-  Global i,j,Angle=0
+  Global i,j,Angle=0,DirectionKey=0
   
 ; Tableau
   Global Dim luneAnim(21), Dim lunewaitAnim(21)
+  Global Dim Sorts(3), Dim PositionEffetSort(6)
   
 ;- PROCEDURE
   Declare Menu()
@@ -50,10 +51,9 @@ LoadSprite(9,"Ressources/img/Sort/sort-blanc.png",#PB_Sprite_AlphaBlending)
 For i=0 To 21
   LoadSprite(50+i,"Ressources/img/Lune/lune"+Str(i)+".png",#PB_Sprite_AlphaBlending)
 Next
-  
-  
-;-Creation sprite
-;-Chargement texte
+
+
+;- Chargement Font
   LoadImage(200,"Ressources/img/Font.bmp")              ; Charge l'image de toutes les lettres
   For j=0 To 125-33                               ; Fait une boucle de toutes les lettres
     GrabImage(200,j,j*16,0,j*16+16,16)            ; Découpe lettre par lettre
@@ -63,10 +63,13 @@ Next
       StopDrawing()
   Next
 
-
-
 ; initialisation
   Mode=1
+  Sorts(1)=3 ;ROUGE
+  Sorts(2)=4 ;VERT
+  Sorts(3)=5 ;BLANC
+  PositionEffetSortX=380
+  PositionEffetSortY=565
   
 ;-  *********************  
 ;--  START GAME LOOP
@@ -91,37 +94,72 @@ Next
   Procedure GAME()
     DisplaySprite(1,0,0)
     DisplaySprite(2,0,0)
-    DisplaySprite(3,2,2)
-    DisplaySprite(4,78,2)
-    DisplaySprite(5,154,2)
     
-    If KeyboardPushed(#PB_Key_Left)
-      Angle-10
-    ElseIf KeyboardPushed(#PB_Key_Right)
-      Angle+10
-    ElseIf KeyboardPushed(#PB_Key_Up)
+    DisplaySprite(Sorts(1),2,2)
+    DisplaySprite(Sorts(2),78,2)
+    DisplaySprite(Sorts(3),154,2)
+    
+    ;-- Gestion de la baguette
+    If DirectionKey=0
+      If KeyboardPushed(#PB_Key_Left)
+        DirectionKey=1
+      ElseIf KeyboardPushed(#PB_Key_Right)
+        DirectionKey=3
+        Angle+10
+      ElseIf KeyboardPushed(#PB_Key_Up)
+        DirectionKey=2
+      EndIf
+    EndIf
+     
+    If DirectionKey=1
+      If Angle>-20
+        Angle-10
+      Else
+        DirectionKey=0
+      EndIf
+    EndIf
+    
+    If DirectionKey=2
       If Angle<0
         Angle+10
       ElseIf Angle>0
         Angle-10
+      Else
+        DirectionKey=0
       EndIf
     EndIf
     
-    If Angle>20
+    If DirectionKey=3
+      If Angle<20
+        Angle+10
+      Else
+        Angle=20
+        DirectionKey=0
+      EndIf
+    EndIf
+    
+    If Angle=0
+      PositionEffetSortX=450
+      PositionEffetSortY=555
+    ElseIf Angle=20
       Angle=20
-    ElseIf Angle<-20
+      PositionEffetSortX=515
+      PositionEffetSortY=565
+    ElseIf Angle=-20
       Angle=-20
+      PositionEffetSortX=385
+      PositionEffetSortY=565
     EndIf
     
     RotateSprite(6,Angle,0)
     DisplayTransparentSprite(6,300,600,255)
     
     If KeyboardPushed(#PB_Key_K)
-      DisplayTransparentSprite(7,515,565,230) 
+      DisplayTransparentSprite(Sorts(1)+4,PositionEffetSortX,PositionEffetSortY,230)
     ElseIf KeyboardPushed(#PB_Key_L)
-      DisplayTransparentSprite(8,380,565,230)
+      DisplayTransparentSprite(Sorts(2)+4,PositionEffetSortX,PositionEffetSortY,230)
     ElseIf KeyboardPushed(#PB_Key_M)
-      DisplayTransparentSprite(9,450,555,230)
+      DisplayTransparentSprite(Sorts(3)+4,PositionEffetSortX,PositionEffetSortY,230)
     EndIf
     
     
@@ -151,8 +189,8 @@ Next
     Next
   EndProcedure
 ; IDE Options = PureBasic 5.31 (Windows - x86)
-; CursorPosition = 119
-; FirstLine = 98
+; CursorPosition = 143
+; FirstLine = 127
 ; Folding = -
 ; EnableUnicode
 ; EnableXP
