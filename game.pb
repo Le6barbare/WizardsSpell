@@ -16,9 +16,9 @@
   Global i,j,Angle=0,DirectionKey=0,SpellKey=0,TimeSort=3
   
 ; Tableau
-  Global Dim luneAnim(21), Dim lunewaitAnim(21)
   Global Dim Sorts(3), Dim PositionEffetSort(6)
   Global Dim flamAnim(4), Dim flamWaitAnim(4)
+  Global luneWait=0, luneX.f=1024/2-200, luneY.f=0, initCentrLuneX=1024/2, initCentrLuneY=250, multi
   
 ;- PROCEDURE
   Declare Menu()
@@ -37,7 +37,7 @@
 
 
 ;-Chargement sprite
-LoadSprite(1,"Ressources/img/background.png")
+LoadSprite(1,"Ressources/img/background-alpha.png")
 LoadSprite(2,"Ressources/img/spells.png")
 LoadSprite(3,"Ressources/img/spellred.png")
 LoadSprite(4,"Ressources/img/spellgreen.png")
@@ -46,6 +46,7 @@ LoadSprite(6,"Ressources/img/baguette.png",#PB_Sprite_AlphaBlending)
 LoadSprite(7,"Ressources/img/Sort/sort-rouge.png",#PB_Sprite_AlphaBlending)
 LoadSprite(8,"Ressources/img/Sort/sort-vert.png",#PB_Sprite_AlphaBlending)
 LoadSprite(9,"Ressources/img/Sort/sort-blanc.png",#PB_Sprite_AlphaBlending)
+LoadSprite(10,"Ressources/img/Lune/lune0.png",#PB_Sprite_AlphaBlending)
  
 LoadImage(300,"Ressources/img/Animation/flamme2.png",#PB_Sprite_AlphaBlending)
 For j=0 To 4
@@ -196,6 +197,21 @@ For j=0 To 4
       DisplayTransparentSprite(300+flamAnim(j),200,400,255)  
     Next 
     
+    
+    
+     ;--calcul trajectoire lune*
+    luneWait = luneWait + 1
+    If luneWait>10
+      If luneX.f<1024/2 : multi = multi + 1 : EndIf
+      If luneX.f>1024/2 : multi = multi - 1 : EndIf
+      If luneX.f>1024/2+200 : multi = 0 : EndIf
+      luneX.f = luneX.f + multi/30
+      luneWait=0
+    EndIf
+    luneY.f = initCentrLuneY-Sqr(200*200-(luneX.f-initCentrLuneX)*(luneX.f-initCentrLuneX))
+    DisplayTransparentSprite(10,luneX,luneY,255)
+    
+    
   EndProcedure
 
   Procedure Menu()
@@ -212,8 +228,8 @@ For j=0 To 4
     Next
   EndProcedure
 ; IDE Options = PureBasic 5.31 (Windows - x86)
-; CursorPosition = 180
-; FirstLine = 154
+; CursorPosition = 20
+; FirstLine = 5
 ; Folding = -
 ; EnableUnicode
 ; EnableXP
