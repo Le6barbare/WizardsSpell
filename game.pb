@@ -7,18 +7,18 @@
   InitKeyboard()
   InitSound()
 
-
 ;----- Décodeur des formats images
   UsePNGImageDecoder()
   UseJPEGImageDecoder()
   UseOGGSoundDecoder() 
 
-
-;----- declare variable 
-  Global i ,j
-;- VARIABLES DIM
+;----- VARIABLES
+  Global i,j,Angle=0
+  
+; Tableau
   Global Dim luneAnim(21), Dim lunewaitAnim(21)
-;- Procedures
+  
+;- PROCEDURE
   Declare Menu()
   Declare GAME()
   Declare AffText(Text$,x.i,y.i,light.i)
@@ -91,7 +91,27 @@ Next
     DisplaySprite(3,2,2)
     DisplaySprite(4,78,2)
     DisplaySprite(5,154,2)
-    DisplayTransparentSprite(6,488,478,255)
+    
+    If KeyboardPushed(#PB_Key_Left)
+      Angle-10
+    ElseIf KeyboardPushed(#PB_Key_Right)
+      Angle+10
+    ElseIf KeyboardPushed(#PB_Key_Up)
+      If Angle<0
+        Angle+10
+      ElseIf Angle>0
+        Angle-10
+      EndIf
+    EndIf
+    
+    If Angle>20
+      Angle=20
+    ElseIf Angle<-20
+      Angle=-20
+    EndIf
+    
+    RotateSprite(6,Angle,0)
+    DisplayTransparentSprite(6,300,600,255)
     
     For j=0 To 21
       lunewaitAnim(j)+1
@@ -118,8 +138,8 @@ Next
     Next
   EndProcedure
 ; IDE Options = PureBasic 5.31 (Windows - x86)
-; CursorPosition = 102
-; FirstLine = 86
+; CursorPosition = 122
+; FirstLine = 106
 ; Folding = -
 ; EnableUnicode
 ; EnableXP
