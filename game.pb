@@ -42,7 +42,6 @@
 
 
 ;-Chargement sprite
-
   LoadSprite(1,"Ressources/img/background-alpha.png")
   LoadSprite(2,"Ressources/img/HUB/Interface.png",#PB_Sprite_AlphaBlending)
   LoadSprite(3,"Ressources/img/Sort/livre-rouge.png",#PB_Sprite_AlphaBlending)
@@ -125,24 +124,86 @@
   Procedure GAME()
   
     DisplaySprite(1,0,0)
-    DisplayTransparentSprite(2,0,0)
-
+    DisplayTransparentSprite(2,0,0) ;étoiles
     
-;-affichage des monstres
+  ;--calcul trajectoire lune
+    luneWait = luneWait + 1
+    If luneWait>10
+      If luneX.f<1024/2 : multi = multi + 1 : EndIf
+      If luneX.f>1024/2 : multi = multi - 1 : EndIf
+      If luneX.f>1024/2+200 : luneX.f=1024/2-200 : nbNuit+1 :
+   
+   
+      ;-melange des grimoires
+        tirage = Random(5,3)
+        precedant1 = tirage
+        Sorts(1) = tirage
+        tirage = Random(5,3)
+        While tirage = precedant1
+          tirage = Random(5,3)
+        Wend
+        precedant2 = tirage
+        Sorts(2) = tirage
+        tirage = Random(5,3)
+        While tirage = precedant2 Or tirage = precedant1
+          tirage = Random(5,3)
+        Wend
+        Sorts(3) = tirage
+
+    EndIf
+      luneX.f = luneX.f + multi/30
+      luneWait=0
+    EndIf
+    luneY.f = initCentrLuneY-Sqr(200*200-(luneX.f-initCentrLuneX)*(luneX.f-initCentrLuneX)) 
+    DisplayTransparentSprite(10,luneX,luneY,255)
+    DisplayTransparentSprite(23,2,274,255)
+    
+  ;-info text  interface
+    AffText("Score " + Str(Score),800,50,255)
+    AffText("vie " + Str(Vie),800,20,255)
+    AffText("Nuit "+ Str(nbNuit),815,5,255)
+    
+  ;-- trajectoire nuages 
+    nuage1.f+1/5
+    If nuage1.f>1024 : nuage1.f = 0-100 : EndIf
+    DisplayTransparentSprite(21,nuage1.f,100,255)
+   
+    nuage2.f+1/3
+    If nuage2.f>1024 : nuage2.f = 0-100 : EndIf
+    DisplayTransparentSprite(22,nuage2.f,150,255)
+   
+    nuage3.f+1/8
+    If nuage3>1024 : nuage3.f = 0-100 : EndIf
+    DisplayTransparentSprite(21,nuage3.f,200,255)
+   
+    nuage4.f+1/2
+    If nuage4.f>1024 : nuage4.f = 0-100 : EndIf
+    DisplayTransparentSprite(22,nuage4.f,250,255)
+   
+    nuage5.f+1/4
+    If nuage5.f>1024 : nuage5.f = 0-100 : EndIf
+    DisplayTransparentSprite(21,nuage5.f,300,255)
+  
+  ;-- affichage des grimoires
+    DisplayTransparentSprite(Sorts(1),2,2)
+    DisplayTransparentSprite(Sorts(2),110,2)
+    DisplayTransparentSprite(Sorts(3),210,2)
+    
+  ;-affichage des monstres
     If Monstre(1)<>0
-      DisplayTransparentSprite(Monstre(1)+10,300,400,Monstre(4))
+      DisplayTransparentSprite(Monstre(1)+10,190,360,Monstre(4))
     EndIf
     If Monstre(2)<>0
-      DisplayTransparentSprite(Monstre(2)+10,450,400,Monstre(5))
+      DisplayTransparentSprite(Monstre(2)+10,455,360,Monstre(5))
     EndIf
     If Monstre(3)<>0
-      DisplayTransparentSprite(Monstre(3)+10,600,400,Monstre(6))
+      DisplayTransparentSprite(Monstre(3)+10,710,360,Monstre(6))
     EndIf
 
-     DisplayTransparentSprite(2,0,0)
+    DisplayTransparentSprite(2,0,0)
  
 
-    ;-- Gestion de la baguette
+  ;-- Gestion de la baguette
     If DirectionKey=0
       If KeyboardPushed(#PB_Key_Left)
         DirectionKey=1
@@ -181,7 +242,7 @@
       EndIf
     EndIf
     
-    ;-- Gestion Sorts
+  ;-- Gestion Sorts
     ; Coordonées affichage sort
     If Angle=-20 ; Baguette a gauche
       Angle=-20
@@ -238,13 +299,11 @@
         Else
           Vie-1
           Monstre(3)=0
-        EndIf
+        EndIf 
       EndIf
     EndIf
-    
-  
-    
-   ;-utilisation des spell
+   
+    ;-utilisation des spell
     If SpellKey<>0 And TimeSort>0 
       If Angle=-20 Or Angle=0 Or Angle=20
         DisplayTransparentSprite(Sorts(SpellKey)+4,PositionEffetSortX,PositionEffetSortY,230)
@@ -258,7 +317,6 @@
     
     
   ;-affichage du feu
-  
     For j=0 To 4
       flamWaitAnim(j)+1
       If flamWaitAnim(j)>5
@@ -268,84 +326,13 @@
       EndIf
       DisplayTransparentSprite(300+flamAnim(j),800,600,255)  
     Next 
-  
 
-  ;--calcul trajectoire lune
-
-    luneWait = luneWait + 1
-    If luneWait>10
-      If luneX.f<1024/2 : multi = multi + 1 : EndIf
-      If luneX.f>1024/2 : multi = multi - 1 : EndIf
-      If luneX.f>1024/2+200 : luneX.f=1024/2-200 : nbNuit+1 :
-   
-   
-      ;-melange des grimoires
-        tirage = Random(5,3)
-        precedant1 = tirage
-        Sorts(1) = tirage
-        tirage = Random(5,3)
-        While tirage = precedant1
-          tirage = Random(5,3)
-        Wend
-        precedant2 = tirage
-        Sorts(2) = tirage
-        tirage = Random(5,3)
-        While tirage = precedant2 Or tirage = precedant1
-          tirage = Random(5,3)
-        Wend
-        Sorts(3) = tirage
-
-    EndIf
-      luneX.f = luneX.f + multi/30
-      luneWait=0
-    EndIf
-    luneY.f = initCentrLuneY-Sqr(200*200-(luneX.f-initCentrLuneX)*(luneX.f-initCentrLuneX)) 
-    DisplayTransparentSprite(10,luneX,luneY,255)
-    DisplayTransparentSprite(23,2,274,255)
-
-
-  ;-info text  interface
-    AffText("Score " + Str(Score),800,50,255)
-    AffText("vie " + Str(Vie),800,20,255)
-    AffText("Nuit "+ Str(nbNuit),815,5,255)
-    
-  ;-- trajectoire nuages 
-    nuage1.f+1/5
-    If nuage1.f>1024 : nuage1.f = 0-100 : EndIf
-    DisplayTransparentSprite(21,nuage1.f,100,255)
-   
-    nuage2.f+1/3
-    If nuage2.f>1024 : nuage2.f = 0-100 : EndIf
-    DisplayTransparentSprite(22,nuage2.f,150,255)
-   
-    nuage3.f+1/8
-    If nuage3>1024 : nuage3.f = 0-100 : EndIf
-    DisplayTransparentSprite(21,nuage3.f,200,255)
-   
-    nuage4.f+1/2
-    If nuage4.f>1024 : nuage4.f = 0-100 : EndIf
-    DisplayTransparentSprite(22,nuage4.f,250,255)
-   
-    nuage5.f+1/4
-    If nuage5.f>1024 : nuage5.f = 0-100 : EndIf
-    DisplayTransparentSprite(21,nuage5.f,300,255)
-  
-  ;-- affichage des grimoires
-    DisplayTransparentSprite(Sorts(1),2,2)
-    DisplayTransparentSprite(Sorts(2),110,2)
-    DisplayTransparentSprite(Sorts(3),210,2)
-
-   
-   
-   
   ;-- getion pv/score/monstre
-     
-  ;  AffText("TempoPop:"+Str(TempoRepopMonstre(1)),800,70,255)
-  ;  AffText("LightM1:"+Str(Monstre(4)),800,100,255)
-  ;  AffText("LightM2:"+Str(Monstre(5)),800,130,255)
-  ;  AffText("LightM3:"+Str(Monstre(6)),800,160,255)
+    AffText("TempoPop:"+Str(TempoRepopMonstre(1)),800,70,255)
+    AffText("LightM1:"+Str(Monstre(4)),800,100,255)
+    AffText("LightM2:"+Str(Monstre(5)),800,130,255)
+    AffText("LightM3:"+Str(Monstre(6)),800,160,255)
 
-    
     If Monstre(1)<>0
       Monstre(4)+1
     EndIf
@@ -415,8 +402,8 @@
   EndProcedure
 
 ; IDE Options = PureBasic 5.31 (Windows - x86)
-; CursorPosition = 415
-; FirstLine = 384
+; CursorPosition = 334
+; FirstLine = 355
 ; Folding = -
 ; EnableUnicode
 ; EnableXP
