@@ -22,7 +22,7 @@
   Global tirage, precedant1, precedant2
   Global SelectMenu=0,TempoMenu=50,Mode,Quit, TempoStory=1000,GameLaunch=0
   Global nbfeuMax=10,nbetoileMax=15,Vie,viePerdu, FlamNum=1,timerGameOver,tempoMusicGame,tempoMusicMenu,lightning=1
-  Global animMonstreSpe=0
+  Global TempoMonstreSpe=0
   Global etoileAnim, etoileWaitAnim
 
 ; Tableaux
@@ -392,7 +392,7 @@ Next
         Sorts(3) = tirage
         
         TempoMonstreSpe=50
-        
+        PlaySound(2)
       EndIf
       luneX.f = luneX.f + multi/30
       luneWait=0
@@ -740,8 +740,8 @@ Next
     Next
   EndProcedure
 ; IDE Options = PureBasic 5.31 (Windows - x86)
-; CursorPosition = 740
-; FirstLine = 709
+; CursorPosition = 394
+; FirstLine = 374
 ; Folding = -
 ; EnableUnicode
 ; EnableXP
