@@ -171,10 +171,19 @@ Next
       DisplayTransparentSprite(32,58,54)
       ;AffText(Str(SelectMenu),200,200,255)
       If EnableJoystick
-        If JoystickAxisX(0) Or JoystickAxisY(0)
+        If JoystickAxisX(0)=1 Or JoystickAxisY(0)=1
           If TempoMenu<=5
             PlaySound(3,#PB_Sound_MultiChannel)
-            If SelectMenu=0 : SelectMenu=1 : Else : SelectMenu=0 : EndIf
+            SelectMenu+1
+            If SelectMenu>3 : SelectMenu=0 :  EndIf
+            TempoMenu=50
+          EndIf
+        EndIf
+        If JoystickAxisX(0)=-1 Or JoystickAxisY(0)=-1
+          If TempoMenu<=5
+            PlaySound(3,#PB_Sound_MultiChannel)
+            SelectMenu-1
+            If SelectMenu>0 : SelectMenu=3 :  EndIf
             TempoMenu=50
           EndIf
         EndIf
@@ -241,6 +250,10 @@ Next
         If JoystickButton(0, 1) Or JoystickButton(0, 2) Or JoystickButton(0, 3) Or JoystickButton(0, 4)
           If SelectMenu=0
             GameLaunch=1
+          ElseIf SelectMenu=1
+            DisplaySprite(39,0,0)
+          ElseIf SelectMenu=2
+            DisplaySprite(42,0,0)
           Else
             Quit=1
           EndIf
@@ -715,8 +728,8 @@ Next
     Next
   EndProcedure
 ; IDE Options = PureBasic 5.31 (Windows - x86)
-; CursorPosition = 367
-; FirstLine = 350
+; CursorPosition = 181
+; FirstLine = 172
 ; Folding = -
 ; EnableUnicode
 ; EnableXP
