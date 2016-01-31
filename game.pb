@@ -22,7 +22,7 @@
   Global tirage, precedant1, precedant2
   Global SelectMenu=0,TempoMenu=50,Mode,Quit, TempoStory=1000,GameLaunch=0
   Global nbfeuMax=10,nbetoileMax=15,Vie,viePerdu, FlamNum=1,timerGameOver,tempoMusicGame,tempoMusicMenu,lightning=1
-  Global animMonstreSpe=0
+  Global TempoMonstreSpe=0
 
 ; Tableaux
   Global Dim Sorts(3), Dim PositionEffetSort(6)
@@ -241,7 +241,6 @@ Next
         If JoystickButton(0, 1) Or JoystickButton(0, 2) Or JoystickButton(0, 3) Or JoystickButton(0, 4)
           If SelectMenu=0
             GameLaunch=1
-            
           Else
             Quit=1
           EndIf
@@ -366,10 +365,8 @@ Next
         Wend
         Sorts(3) = tirage
         
-        animMonstreSpe=1
+        TempoMonstreSpe=50
         
-        
-
       EndIf
       luneX.f = luneX.f + multi/30
       luneWait=0
@@ -669,9 +666,14 @@ Next
       EndIf 
     EndIf
 
-     For j=1 To Vie
-       DisplaySprite(20,860+j*10,30)
-     Next
+    For j=1 To Vie
+      DisplaySprite(20,860+j*10,30)
+    Next
+    
+    If TempoMonstreSpe>0
+      TempoMonstreSpe-1
+      DisplayTransparentSprite(14,0,0)
+    EndIf
   EndProcedure
   
   Procedure Flamme() 
@@ -713,8 +715,8 @@ Next
     Next
   EndProcedure
 ; IDE Options = PureBasic 5.31 (Windows - x86)
-; CursorPosition = 228
-; FirstLine = 204
+; CursorPosition = 367
+; FirstLine = 350
 ; Folding = -
 ; EnableUnicode
 ; EnableXP
