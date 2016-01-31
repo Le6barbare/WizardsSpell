@@ -22,12 +22,12 @@
   Global tirage, precedant1, precedant2
   Global SelectMenu=0,TempoMenu=50,Mode,Quit, TempoStory=1000,GameLaunch=0
   Global nbfeuMax=10,nbetoileMax=15,Vie,viePerdu, FlamNum=1,timerGameOver,tempoMusicGame,tempoMusicMenu,lightning=1
-  Global TempoMonstreSpe=0
+  Global animMonstreSpe=0
+  Global etoileAnim, etoileWaitAnim
 
 ; Tableaux
   Global Dim Sorts(3), Dim PositionEffetSort(6)
   Global Dim flamAnim(4), Dim flamWaitAnim(4)
-  Global Dim etoileAnim(7), Dim etoileWaitAnim(7)
   Global Dim Monstre(6), Dim TempoRepopMonstre(3)
 
   Global Dim feuX(nbfeuMax),Dim feuY(nbfeuMax),Dim fireBool(nbfeuMax)
@@ -109,7 +109,7 @@
  ;- Chargement des etoile
 For i=1 To 7
   LoadSprite(600+i,"Ressources/img/Animation/Etoile/etoile"+Str(i)+".png",#PB_Sprite_AlphaBlending)
-  TransparentSpriteColor(600+i,RGB(0,0,0)) ; Couleur de  transparence
+  TransparentSpriteColor(600+i,RGB(255,255,255)) ; Couleur de  transparence
 Next
 
 ;- Creation de la bare de Vie
@@ -339,6 +339,19 @@ Next
     EndIf
 
     DisplaySprite(1,0,0)
+    
+;     ;-Affichage des etoile;  
+;      For j=0 To nbetoileMax
+;          etoileWaitAnim+1
+;          If etoileWaitAnim>10
+;            etoileWaitAnim=0
+;            etoileAnim+1
+;            If etoileAnim>7 :  etoileAnim=0 : EndIf       
+;             DisplayTransparentSprite(600+etoileAnim,etoileX(j),etoileY(j),255)  
+;          EndIf
+;      Next
+    
+    
   ;--calcul trajectoire lune
     luneWait = luneWait + 1
     If luneWait>10
@@ -707,14 +720,13 @@ Next
 ;     Procedure etoile() 
 ;      ;-Affichage des etoile;  
 ;      For j=0 To nbetoileMax
-;       
-;          etoileWaitAnim(i)+1
-;          If etoileWaitAnim(i)>10
-;            etoileWaitAnim(i)=0
-;            If etoileAnim(i)>6 :  etoileAnim(i)=0 : EndIf    
+;          etoileWaitAnim+1
+;          If etoileWaitAnim>10
+;            etoileWaitAnim=0
+;            etoileAnim+1
+;            If etoileAnim>7 :  etoileAnim=0 : EndIf       
+;             DisplayTransparentSprite(600+etoileAnim,etoileX(j),etoileY(j),255)  
 ;          EndIf
-;          DisplayTransparentSprite(600+i,etoileX(j),etoileY(j),255)
-;        Next  
 ;      Next 
 ;   EndProcedure
 
@@ -728,8 +740,8 @@ Next
     Next
   EndProcedure
 ; IDE Options = PureBasic 5.31 (Windows - x86)
-; CursorPosition = 181
-; FirstLine = 172
+; CursorPosition = 740
+; FirstLine = 709
 ; Folding = -
 ; EnableUnicode
 ; EnableXP
