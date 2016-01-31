@@ -130,9 +130,9 @@
   Monstre(1)=0;Random(3,1)
   Monstre(2)=0;Random(3,1)
   Monstre(3)=0;Random(3,1)
-  Monstre(4)=0 ;Luminosité Monstre
-  Monstre(5)=0 ;Luminosité Monstre
-  Monstre(6)=0 ;Luminosité Monstre
+  Monstre(4)=50 ;Luminosité Monstre
+  Monstre(5)=50 ;Luminosité Monstre
+  Monstre(6)=50 ;Luminosité Monstre
   TempoRepopMonstre(1)=Random(300,50)
   TempoRepopMonstre(2)=Random(300,50)
   TempoRepopMonstre(3)=Random(300,50)
@@ -276,9 +276,9 @@
         Monstre(1)=Random(3,1)
         Monstre(2)=Random(3,1)
         Monstre(3)=Random(3,1)
-        Monstre(4)=0
-        Monstre(5)=0
-        Monstre(6)=0
+        Monstre(4)=50
+        Monstre(5)=50
+        Monstre(6)=50
         TempoRepopMonstre(1)=Random(300,50)
         TempoRepopMonstre(2)=Random(300,50)
         TempoRepopMonstre(3)=Random(300,50)
@@ -515,21 +515,25 @@
         If TimeSort>=4 Or TimeSort<=6
           DisplayTransparentSprite(Sorts(SpellKey)+4,PositionEffetSortX,PositionEffetSortY,230)
         EndIf
-        If TimeSort>=1 Or TimeSort<=3
-          DisplayTransparentSprite(Sorts(SpellKey)+4,PositionEffetHitMonstreX,PositionEffetHitMonstreY,230)
+        If Monstre(1)<>0 Or Monstre(2)<>0 Or Monstre(3)<>0
+          If TimeSort>=1 Or TimeSort<=3
+            DisplayTransparentSprite(Sorts(SpellKey)+4,PositionEffetHitMonstreX,PositionEffetHitMonstreY,230)
+          EndIf
         EndIf
-        TimeSort-1
       EndIf
+      TimeSort-1
     EndIf
     
     If EnableJoystick
       If JoystickButton(0, 3)=0 And JoystickButton(0, 2)=0 And JoystickButton(0, 1)=0
         JoystickButtonPressed=0
         SpellKey=0
+        TimeSort=0
       EndIf
     Else
       If KeyboardReleased(#PB_Key_K) Or KeyboardReleased(#PB_Key_L) Or KeyboardReleased(#PB_Key_M)
         SpellKey=0
+        TimeSort=0
       EndIf
     EndIf
   ;-- getion pv/score/monstre
@@ -542,7 +546,8 @@
 ;     AffText("LightM1:"+Str(Monstre(4)),800,250,255)
 ;     AffText("LightM2:"+Str(Monstre(5)),800,280,255)
 ;     AffText("LightM3:"+Str(Monstre(6)),800,310,255)
-    AffText("TimeSort:"+Str(TimeSort),800,310,255)
+      AffText("TimeSort:"+Str(TimeSort),800,310,255)
+      AffText("SpellKey:"+Str(SpellKey),800,340,255)
 
     If Monstre(1)<>0
       Monstre(4)+1
@@ -567,7 +572,7 @@
       Vie-1
     EndIf
     If Monstre(1)=0
-      Monstre(4)=0
+      Monstre(4)=50
       If TempoRepopMonstre(1)>=10
         TempoRepopMonstre(1)-1
       ElseIf TempoRepopMonstre(1)<10
@@ -576,7 +581,7 @@
       EndIf
     EndIf
     If Monstre(2)=0
-      Monstre(5)=0
+      Monstre(5)=50
       If TempoRepopMonstre(2)>=10
         TempoRepopMonstre(2)-1
       ElseIf TempoRepopMonstre(2)<10
@@ -585,7 +590,7 @@
       EndIf
     EndIf
     If Monstre(3)=0
-      Monstre(6)=0
+      Monstre(6)=50
       If TempoRepopMonstre(3)>=10
         TempoRepopMonstre(3)-1
       ElseIf TempoRepopMonstre(3)<10
@@ -642,8 +647,8 @@
     Next
   EndProcedure
 ; IDE Options = PureBasic 5.31 (Windows - x86)
-; CursorPosition = 477
-; FirstLine = 446
+; CursorPosition = 530
+; FirstLine = 257
 ; Folding = -
 ; EnableUnicode
 ; EnableXP
