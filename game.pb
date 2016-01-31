@@ -72,6 +72,7 @@
   LoadSprite(11,"Ressources/img/Monstres/monstre-rouge.png",#PB_Sprite_AlphaBlending)
   LoadSprite(12,"Ressources/img/Monstres/monstre-vert2.png",#PB_Sprite_AlphaBlending)
   LoadSprite(13,"Ressources/img/Monstres/monstre-blanc.png",#PB_Sprite_AlphaBlending)
+  LoadSprite(14,"Ressources/img/Monstres/monstre-spe.png",#PB_Sprite_AlphaBlending)
   
   LoadSprite(21,"Ressources/img/Animation/nuage1.png",#PB_Sprite_AlphaBlending)
   LoadSprite(22,"Ressources/img/Animation/nuage2.png",#PB_Sprite_AlphaBlending)
@@ -88,6 +89,9 @@
   LoadSprite(39,"Ressources/img/TitleScreen/page-controle.png",#PB_Sprite_AlphaBlending)
   LoadSprite(40,"Ressources/img/TitleScreen/controle.png",#PB_Sprite_AlphaBlending)
   LoadSprite(41,"Ressources/img/TitleScreen/controle2.png",#PB_Sprite_AlphaBlending)
+  LoadSprite(42,"Ressources/img/TitleScreen/credits.png",#PB_Sprite_AlphaBlending)
+  LoadSprite(43,"Ressources/img/TitleScreen/credits0.png",#PB_Sprite_AlphaBlending)
+  LoadSprite(44,"Ressources/img/TitleScreen/credits1.png",#PB_Sprite_AlphaBlending)
 
  ;- Chargement du feu
   LoadImage(300,"Ressources/img/Animation/flamme2.png",#PB_Sprite_AlphaBlending)
@@ -345,8 +349,6 @@ Next
         Sorts(3) = tirage
 
       EndIf
-;         PlaySound(5)
-    ;-----EndIf 
       luneX.f = luneX.f + multi/30
       luneWait=0
     EndIf
@@ -689,8 +691,8 @@ Next
     Next
   EndProcedure
 ; IDE Options = PureBasic 5.31 (Windows - x86)
-; CursorPosition = 348
-; FirstLine = 339
+; CursorPosition = 130
+; FirstLine = 117
 ; Folding = -
 ; EnableUnicode
 ; EnableXP
