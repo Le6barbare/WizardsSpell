@@ -23,7 +23,6 @@
   Global SelectMenu=0,TempoMenu=50,Mode,Quit, TempoStory=1000,GameLaunch=0
   Global nbfeuMax=10,nbetoileMax=15, Vie, viePerdu,  FlamNum=1, timerGameOver,tempoMusicGame,tempoMusicMenu
 
-
 ; Tableaux
   Global Dim Sorts(3), Dim PositionEffetSort(6)
   Global Dim flamAnim(4), Dim flamWaitAnim(4)
@@ -128,17 +127,17 @@ Next
 ; initialisation
   Mode=0
   Score=0
-  Sorts(1)= 3
-  Sorts(2)= 4
-  Sorts(3)= 5
+  Sorts(1)=3
+  Sorts(2)=4
+  Sorts(3)=5
   PositionEffetSortX=380
   PositionEffetSortY=565
   Monstre(1)=0;Random(3,1)
   Monstre(2)=0;Random(3,1)
   Monstre(3)=0;Random(3,1)
-  Monstre(4)=0 ;Luminosité Monstre
-  Monstre(5)=0 ;Luminosité Monstre
-  Monstre(6)=0 ;Luminosité Monstre
+  Monstre(4)=50 ;Luminosité Monstre
+  Monstre(5)=50 ;Luminosité Monstre
+  Monstre(6)=50 ;Luminosité Monstre
   TempoRepopMonstre(1)=Random(300,50)
   TempoRepopMonstre(2)=Random(300,50)
   TempoRepopMonstre(3)=Random(300,50)
@@ -223,21 +222,21 @@ Next
       If SelectMenu=0
       ;Play !!!!!
         DisplayTransparentSprite(34,327,295)
-        ;Controle
+        ;Controles
         DisplayTransparentSprite(40,300,371)
         ;Quit
         DisplayTransparentSprite(35,300,447)
       ElseIf SelectMenu=1
       ;Play
         DisplayTransparentSprite(33,327,295)
-        ;Controle !!!!!
+        ;Controles !!!!!
         DisplayTransparentSprite(41,300,371)
         ;Quit
         DisplayTransparentSprite(35,300,447)
       ElseIf SelectMenu=2
       ;Play
       DisplayTransparentSprite(33,327,295)
-      ;Controle
+      ;Controles
       DisplayTransparentSprite(40,300,371)
       ;Quit !!!!!
       DisplayTransparentSprite(36,300,447)
@@ -292,7 +291,7 @@ Next
         Mode=1
         ;GameLaunch=0
       EndIf
-      ;-- innitialisation partie
+      ;-- initialisation partie
       
         Score=0
         Sorts(1)= 3
@@ -301,9 +300,9 @@ Next
         Monstre(1)=Random(3,1)
         Monstre(2)=Random(3,1)
         Monstre(3)=Random(3,1)
-        Monstre(4)=0
-        Monstre(5)=0
-        Monstre(6)=0
+        Monstre(4)=50
+        Monstre(5)=50
+        Monstre(6)=50
         TempoRepopMonstre(1)=Random(300,50)
         TempoRepopMonstre(2)=Random(300,50)
         TempoRepopMonstre(3)=Random(300,50)
@@ -464,13 +463,19 @@ Next
       Angle=-20
       PositionEffetSortX=317
       PositionEffetSortY=497
+      PositionEffetHitMonstreX=190-65
+      PositionEffetHitMonstreY=360-50
     ElseIf Angle=0 ; Baguette au centre
       PositionEffetSortX=385
       PositionEffetSortY=485
+      PositionEffetHitMonstreX=455-65
+      PositionEffetHitMonstreY=360-50
     ElseIf Angle=20 ; Baguette a droite
       Angle=20
       PositionEffetSortX=452
       PositionEffetSortY=497
+      PositionEffetHitMonstreX=710-65
+      PositionEffetHitMonstreY=360-50
     EndIf
     
     ; Rotation et affichage
@@ -482,15 +487,15 @@ Next
       If JoystickButton(0, 3) And JoystickButtonPressed=0 And SpellKey=0
         JoystickButtonPressed=1
         SpellKey=1
-        TimeSort=5
+        TimeSort=6
       ElseIf  Or JoystickButton(0, 1) And JoystickButtonPressed=0 And SpellKey=0
         JoystickButtonPressed=1
         SpellKey=2
-        TimeSort=5
+        TimeSort=6
       ElseIf  Or JoystickButton(0, 2) And JoystickButtonPressed=0 And SpellKey=0
         JoystickButtonPressed=1
         SpellKey=3
-        TimeSort=5
+        TimeSort=6
       EndIf
     Else
       If KeyboardPushed(#PB_Key_K) And SpellKey=0
@@ -513,7 +518,7 @@ Next
         If Sorts(SpellKey)=Monstre(1)+2
           Score+1
           Monstre(1)=0
-          PlaySound(11);-----------------------------------------------------------
+          PlaySound(11);_________
         Else
           Vie-1
           Monstre(1)=0
@@ -539,29 +544,31 @@ Next
       EndIf
     EndIf
    
-   ;bool pressed = false
-   ; if button(A, appuyer) && pressed=false
-   ; pressed = true;
-   ; odihvoiehvdze
-   ; if button(A, relacher)
-   ; pressed = false
-   
     ;-utilisation des spell
     If SpellKey<>0 And TimeSort>0 
       If Angle=-20 Or Angle=0 Or Angle=20
-        DisplayTransparentSprite(Sorts(SpellKey)+4,PositionEffetSortX,PositionEffetSortY,230)
-        TimeSort-1
+        If TimeSort>=4 Or TimeSort<=6
+          DisplayTransparentSprite(Sorts(SpellKey)+4,PositionEffetSortX,PositionEffetSortY,230)
+        EndIf
+        If Monstre(1)<>0 Or Monstre(2)<>0 Or Monstre(3)<>0
+          If TimeSort>=1 Or TimeSort<=3
+            DisplayTransparentSprite(Sorts(SpellKey)+4,PositionEffetHitMonstreX,PositionEffetHitMonstreY,230)
+          EndIf
+        EndIf
       EndIf
+      TimeSort-1
     EndIf
     
     If EnableJoystick
       If JoystickButton(0, 3)=0 And JoystickButton(0, 2)=0 And JoystickButton(0, 1)=0
         JoystickButtonPressed=0
         SpellKey=0
+        TimeSort=0
       EndIf
     Else
       If KeyboardReleased(#PB_Key_K) Or KeyboardReleased(#PB_Key_L) Or KeyboardReleased(#PB_Key_M)
         SpellKey=0
+        TimeSort=0
       EndIf
     EndIf
   ;-- getion pv/score/monstre
@@ -574,6 +581,8 @@ Next
 ;     AffText("LightM1:"+Str(Monstre(4)),800,250,255)
 ;     AffText("LightM2:"+Str(Monstre(5)),800,280,255)
 ;     AffText("LightM3:"+Str(Monstre(6)),800,310,255)
+;       AffText("TimeSort:"+Str(TimeSort),800,310,255)
+;       AffText("SpellKey:"+Str(SpellKey),800,340,255)
 
     If Monstre(1)<>0
       Monstre(4)+1
@@ -597,6 +606,7 @@ Next
       Monstre(3)=0
       Vie-1
     EndIf
+
     If Monstre(1)=0  
       Monstre(4)=0
       If TempoRepopMonstre(1)>=10
@@ -607,7 +617,7 @@ Next
       EndIf
     EndIf
     If Monstre(2)=0
-      Monstre(5)=0
+      Monstre(5)=50
       If TempoRepopMonstre(2)>=10
         TempoRepopMonstre(2)-1
       ElseIf TempoRepopMonstre(2)<10
@@ -616,7 +626,7 @@ Next
       EndIf
     EndIf
     If Monstre(3)=0
-      Monstre(6)=0
+      Monstre(6)=50
       If TempoRepopMonstre(3)>=10
         TempoRepopMonstre(3)-1
       ElseIf TempoRepopMonstre(3)<10
@@ -692,9 +702,10 @@ Next
       EndIf
     Next
   EndProcedure
+
 ; IDE Options = PureBasic 5.31 (Windows - x86)
-; CursorPosition = 650
-; FirstLine = 636
+; CursorPosition = 580
+; FirstLine = 558
 ; Folding = -
 ; EnableUnicode
 ; EnableXP
