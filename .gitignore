@@ -19,7 +19,6 @@ $RECYCLE.BIN/
 
 # Ressources non libre
 *.jpg
-*.bmp
 *.gif
 *.mp3
 *.wav

@@ -9,7 +9,6 @@
     Global EnableJoystick = 1
   EndIf
   InitSound()
-
 ;----- Décodeur des formats images
   UsePNGImageDecoder()
   UseJPEGImageDecoder()
@@ -47,7 +46,7 @@
 
 ;-Chargement Sound
 ;LoadSound(1,"Data/SoundPlasmaGFire.ogg")
-;PlaySound(2)
+
 
 
 ;-Chargement sprite
@@ -77,9 +76,25 @@
   LoadSprite(36,"Ressources/img/TitleScreen/quitter2.png",#PB_Sprite_AlphaBlending)
   LoadSprite(37,"Ressources/img/TitleScreen/story.png",#PB_Sprite_AlphaBlending)
   LoadSprite(38,"Ressources/img/TitleScreen/game-over.png",#PB_Sprite_AlphaBlending)
+  LoadSprite(39,"Ressources/img/TitleScreen/page-controle.png",#PB_Sprite_AlphaBlending)
+  LoadSprite(40,"Ressources/img/TitleScreen/controle.png",#PB_Sprite_AlphaBlending)
+  LoadSprite(41,"Ressources/img/TitleScreen/controle2.png",#PB_Sprite_AlphaBlending)
+ 
+  LoadSound(50,"Ressources/sound/Musiques/ambiance.ogg", #PB_Sound_Streaming)
+  LoadSound(51,"Ressources/sound/Musiques/boucle.ogg", #PB_Sound_Streaming)
+  LoadSound(52,"Ressources/sound/Musiques/musique-intro.ogg", #PB_Sound_Streaming)
+  LoadSound(53,"Ressources/sound/Musiques/musique-fin.ogg", #PB_Sound_Streaming)
   
+  LoadSound(54,"Ressources/sound/Enregistrement/Welcome.ogg", #PB_Sound_Streaming)
+  LoadSound(55,"Ressources/sound/Enregistrement/Story.ogg", #PB_Sound_Streaming)
+  
+  LoadSound(56,"Ressources/sound/Bruitage/menu.ogg", #PB_Sound_Streaming)
+  LoadSound(57,"Ressources/sound/Bruitage/game-over.ogg", #PB_Sound_Streaming)
+ 
    
   LoadImage(300,"Ressources/img/Animation/flamme2.png",#PB_Sprite_AlphaBlending)
+ 
+  
   For j=0 To 4
     GrabImage(300,1,j*320/5,0, (j+1)*320/5,64)
     CreateSprite(300+j,320/5,64,#PB_Sprite_AlphaBlending)
@@ -130,7 +145,7 @@
   Next
 
 ;-  *********************  
-;--  START GAME LOOP
+;--  START GAME LOOP&
 ;- 
   Repeat
     ExamineKeyboard()
@@ -150,12 +165,14 @@
 ;-  *********************
 
 
+
 ;- PROCEDURES
   Procedure Menu()
+    PlaySound(54)
     If GameLaunch=0
+    
       DisplaySprite(31,0,0)
       DisplayTransparentSprite(32,58,54)
-      
       If EnableJoystick
         If JoystickAxisX(0) Or JoystickAxisY(0)
           If TempoMenu<=5
@@ -164,24 +181,49 @@
           EndIf
         EndIf
       Else
-        If KeyboardPushed(#PB_Key_Up) Or KeyboardPushed(#PB_Key_Down) Or KeyboardPushed(#PB_Key_Right) Or KeyboardPushed(#PB_Key_Left) Or KeyboardPushed(#PB_Key_Q) Or KeyboardPushed(#PB_Key_S) Or KeyboardPushed(#PB_Key_D) Or KeyboardPushed(#PB_Key_Z)
+        If KeyboardPushed(#PB_Key_Down) Or KeyboardPushed(#PB_Key_S)
           If TempoMenu<=5
-            If SelectMenu=0 : SelectMenu=1 : Else : SelectMenu=0 : EndIf
+            If SelectMenu<2 : SelectMenu=SelectMenu+1 : EndIf
+            TempoMenu=50
+          EndIf
+        EndIf
+        If KeyboardPushed(#PB_Key_Up) Or KeyboardPushed(#PB_Key_Z)
+          If TempoMenu<=5
+            If SelectMenu>0 : SelectMenu=SelectMenu-1 : EndIf
             TempoMenu=50
           EndIf
         EndIf
       EndIf
-      
       If TempoMenu>5
         TempoMenu-2
       EndIf
+        StopSound(54)
+      If IsSound(55)
       
+  
+        PlaySound(55)
+      EndIf
       If SelectMenu=0
+      ;Play !!!!!
         DisplayTransparentSprite(34,327,295)
-        DisplayTransparentSprite(35,292,424)
-      Else
+        ;Controle
+        DisplayTransparentSprite(40,300,371)
+        ;Quit
+        DisplayTransparentSprite(35,300,447)
+      ElseIf SelectMenu=1
+      ;Play
         DisplayTransparentSprite(33,327,295)
-        DisplayTransparentSprite(36,292,424)
+        ;Controle !!!!!
+        DisplayTransparentSprite(41,300,371)
+        ;Quit
+        DisplayTransparentSprite(35,300,447)
+      Else
+      ;Play
+      DisplayTransparentSprite(33,327,295)
+      ;Controle
+      DisplayTransparentSprite(40,300,371)
+      ;Quit !!!!!
+      DisplayTransparentSprite(36,300,447)
       EndIf
       
       If EnableJoystick
@@ -196,6 +238,8 @@
         If KeyboardPushed(#PB_Key_Space) Or KeyboardPushed(#PB_Key_Return)
           If SelectMenu=0
             GameLaunch=1
+          ElseIf SelectMenu=1
+            DisplaySprite(39,0,0)
           Else
             Quit=1
           EndIf
@@ -203,6 +247,7 @@
       EndIf
       
     ElseIf GameLaunch=1
+
       DisplaySprite(37,0,0)
       ;TempoStory=1000
       TempoStory-1
@@ -224,6 +269,7 @@
         ;GameLaunch=0
       EndIf
       ;-- innitialisation partie
+      
         Score=0
         Sorts(1)= 3
         Sorts(2)= 4
@@ -252,8 +298,8 @@
   
   
   Procedure GAME()
+  StopSound(55)
     DisplaySprite(1,0,0)
-    
   ;--calcul trajectoire lune
     luneWait = luneWait + 1
     If luneWait>10
@@ -331,7 +377,6 @@
     EndIf
 
  
-
   ;-- Gestion de la baguette
     If DirectionKey=0
       If EnableJoystick    
@@ -592,16 +637,9 @@
       EndIf
     Next
   EndProcedure
-
 ; IDE Options = PureBasic 5.31 (Windows - x86)
-<<<<<<< HEAD
-; CursorPosition = 450
-; FirstLine = 435
-; Folding = 4
-=======
-; CursorPosition = 190
-; FirstLine = 172
+; CursorPosition = 200
+; FirstLine = 196
 ; Folding = -
->>>>>>> origin/master
 ; EnableUnicode
 ; EnableXP
