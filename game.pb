@@ -9,19 +9,19 @@
     Global EnableJoystick = 1
   EndIf
   InitSound()
+
 ;----- Décodeur des formats images
   UsePNGImageDecoder()
   UseJPEGImageDecoder()
   UseOGGSoundDecoder()
 
 ;----- VARIABLES
-
   Global i,j,Angle=0,DirectionKey=0,SpellKey=0,TimeSort=3,Score=0,TempoMonstre
   Global luneWait=0, luneX.f=1024/2-200, luneY.f=0, initCentrLuneX=1024/2, initCentrLuneY=250, multi, nbnuit = 1
   Global nuage1.f=Random(1024), nuage2.f=Random(1024), nuage3.f=Random(1024), nuage4.f=Random(1024), nuage5.f=Random(1024)
   Global tirage, precedant1, precedant2
   Global SelectMenu=0,TempoMenu=50,Mode,Quit, TempoStory=1000,GameLaunch=0
-  Global nbfeuMax=10, Vie, viePerdu,  FlamNum=1, timerGameOver
+  Global nbfeuMax=10, Vie, viePerdu,  FlamNum=1, timerGameOver,lightning=1
 
 ; Tableaux
   Global Dim Sorts(3), Dim PositionEffetSort(6)
@@ -29,7 +29,6 @@
   Global Dim Monstre(6), Dim TempoRepopMonstre(3)
 
   Global Dim feuX(nbfeuMax),Dim feuY(nbfeuMax),Dim fireBool(nbfeuMax)
-  
   
 ;- PROCEDURE
   Declare Menu()
@@ -42,11 +41,6 @@
 
 ;Clavier en mode International
   KeyboardMode(#PB_Keyboard_International)
-
-;-Chargement Sound
-;LoadSound(1,"Data/SoundPlasmaGFire.ogg")
-
-
 
 ;-Chargement sprite
   LoadSprite(1,"Ressources/img/background-alpha.png")
@@ -78,7 +72,10 @@
   LoadSprite(39,"Ressources/img/TitleScreen/page-controle.png",#PB_Sprite_AlphaBlending)
   LoadSprite(40,"Ressources/img/TitleScreen/controle.png",#PB_Sprite_AlphaBlending)
   LoadSprite(41,"Ressources/img/TitleScreen/controle2.png",#PB_Sprite_AlphaBlending)
- 
+  
+  LoadImage(300,"Ressources/img/Animation/flamme2.png",#PB_Sprite_AlphaBlending)
+
+;-Chargement Sound
   LoadSound(50,"Ressources/sound/Musiques/ambiance.ogg", #PB_Sound_Streaming)
   LoadSound(51,"Ressources/sound/Musiques/boucle.ogg", #PB_Sound_Streaming)
   LoadSound(52,"Ressources/sound/Musiques/musique-intro.ogg", #PB_Sound_Streaming)
@@ -89,10 +86,6 @@
   
   LoadSound(56,"Ressources/sound/Bruitage/menu.ogg", #PB_Sound_Streaming)
   LoadSound(57,"Ressources/sound/Bruitage/game-over.ogg", #PB_Sound_Streaming)
- 
-   
-  LoadImage(300,"Ressources/img/Animation/flamme2.png",#PB_Sprite_AlphaBlending)
- 
   
   For j=0 To 4
     GrabImage(300,1,j*320/5,0, (j+1)*320/5,64)
@@ -103,7 +96,7 @@
     TransparentSpriteColor(j+300,RGB(0,0,0)) 
   Next
 
-;- Creation de la bare du nb Vie
+;- Creation de la bare de Vie
   CreateSprite(20,10,5,#PB_Sprite_AlphaBlending)
   StartDrawing(SpriteOutput(20))
   Box(0,0,10,5,RGB(255,0,0))
@@ -119,30 +112,12 @@
       StopDrawing()
   Next
 
-; initialisation
-  Mode=0
-  Score=0
-  Sorts(1)=3
-  Sorts(2)=4
-  Sorts(3)=5
-  PositionEffetSortX=380
-  PositionEffetSortY=565
-  Monstre(1)=0;Random(3,1)
-  Monstre(2)=0;Random(3,1)
-  Monstre(3)=0;Random(3,1)
-  Monstre(4)=50 ;Luminosité Monstre
-  Monstre(5)=50 ;Luminosité Monstre
-  Monstre(6)=50 ;Luminosité Monstre
-  TempoRepopMonstre(1)=Random(300,50)
-  TempoRepopMonstre(2)=Random(300,50)
-  TempoRepopMonstre(3)=Random(300,50)
-  Vie=10
-  
   For i=0 To nbfeuMax
     feuX(i)=Random(840,640)
     feuY(i)=Random(670,580)
   Next
 
+  Mode=0
 ;-  *********************  
 ;--  START GAME LOOP&
 ;- 
@@ -162,7 +137,6 @@
 ;- 
 ;--  END GAME LOOP
 ;-  *********************
-
 
 
 ;- PROCEDURES
@@ -203,7 +177,7 @@
         PlaySound(55)
       EndIf
       If SelectMenu=0
-      ;Play !!!!!
+      ; ! Play !
         DisplayTransparentSprite(34,327,295)
         ;Controles
         DisplayTransparentSprite(40,300,371)
@@ -212,7 +186,7 @@
       ElseIf SelectMenu=1
       ;Play
         DisplayTransparentSprite(33,327,295)
-        ;Controles !!!!!
+        ; ! Controles !
         DisplayTransparentSprite(41,300,371)
         ;Quit
         DisplayTransparentSprite(35,300,447)
@@ -221,7 +195,7 @@
       DisplayTransparentSprite(33,327,295)
       ;Controles
       DisplayTransparentSprite(40,300,371)
-      ;Quit !!!!!
+      ; ! Quit !
       DisplayTransparentSprite(36,300,447)
       EndIf
       
@@ -248,7 +222,6 @@
     ElseIf GameLaunch=1
 
       DisplaySprite(37,0,0)
-      ;TempoStory=1000
       TempoStory-1
       ;AffText("TempoStory:" + Str(TempoStory),600,50,255)
       ;AffText("Espace/entrer pour commencer",100,675,255)
@@ -267,12 +240,14 @@
         Mode=1
         ;GameLaunch=0
       EndIf
-      ;-- initialisation partie
       
+      ;-- initialisation partie
         Score=0
         Sorts(1)= 3
         Sorts(2)= 4
         Sorts(3)= 5
+        PositionEffetSortX=380
+        PositionEffetSortY=565
         Monstre(1)=Random(3,1)
         Monstre(2)=Random(3,1)
         Monstre(3)=Random(3,1)
@@ -282,7 +257,7 @@
         TempoRepopMonstre(1)=Random(300,50)
         TempoRepopMonstre(2)=Random(300,50)
         TempoRepopMonstre(3)=Random(300,50)
-        Vie=10  
+        Vie=10
         nbnuit=1
         luneX.f=1024/2-200
         luneY.f=0
@@ -295,9 +270,8 @@
     EndIf  
   EndProcedure
   
-  
   Procedure GAME()
-  StopSound(55)
+    StopSound(55)
     DisplaySprite(1,0,0)
   ;--calcul trajectoire lune
     luneWait = luneWait + 1
@@ -305,8 +279,24 @@
       If luneX.f<1024/2 : multi = multi + 1 : EndIf
       If luneX.f>1024/2 : multi = multi - 1 : EndIf
       If luneX.f>1024/2+200 : luneX.f=1024/2-200 : nbNuit+1 :
-
-      ;-melange des grimoires
+      
+        If nbNuit=3
+          lightning=2
+        ElseIf nbnuit=6
+          lightning=3
+        ElseIf nbnuit=9
+          lightning=4
+        ElseIf nbnuit=12
+          lightning=5
+        ElseIf nbnuit=15
+          lightning=6
+        ElseIf nbnuit=18
+          lightning=7
+        ElseIf nbnuit=20
+          lightning=10
+        EndIf
+      
+        ;-melange des grimoires
         tirage = Random(5,3)
         precedant1 = tirage
         Sorts(1) = tirage
@@ -322,17 +312,18 @@
         Wend
         Sorts(3) = tirage
 
-    EndIf
+      EndIf
       luneX.f = luneX.f + multi/30
       luneWait=0
     EndIf
+    
     luneY.f = initCentrLuneY-Sqr(200*200-(luneX.f-initCentrLuneX)*(luneX.f-initCentrLuneX)) 
     DisplayTransparentSprite(10,luneX,luneY,255)
     DisplayTransparentSprite(23,2,274,255)
     
   ;-info text interface
     AffText("Score : " + Str(Score),800-30,45,255)
-    AffText("PV:" +Str(Vie),800-30,25,255)
+    AffText("PV:" + Str(Vie),800-30,25,255)
     AffText("Nuit : "+ Str(nbNuit),800-30,5,255)
     
   ;-- trajectoire nuages 
@@ -375,7 +366,6 @@
       DisplayTransparentSprite(Monstre(3)+10,710,360,Monstre(6))
     EndIf
 
- 
   ;-- Gestion de la baguette
     If DirectionKey=0
       If EnableJoystick    
@@ -546,17 +536,18 @@
 ;     AffText("LightM1:"+Str(Monstre(4)),800,250,255)
 ;     AffText("LightM2:"+Str(Monstre(5)),800,280,255)
 ;     AffText("LightM3:"+Str(Monstre(6)),800,310,255)
-      AffText("TimeSort:"+Str(TimeSort),800,310,255)
+      AffText("lightning:"+Str(lightning),800,310,255)
       AffText("SpellKey:"+Str(SpellKey),800,340,255)
 
+    ; Apparition des monstres
     If Monstre(1)<>0
-      Monstre(4)+1
+      Monstre(4)+lightning
     EndIf
     If Monstre(2)<>0
-      Monstre(5)+1
+      Monstre(5)+lightning
     EndIf
     If Monstre(3)<>0
-      Monstre(6)+1
+      Monstre(6)+lightning
     EndIf
     
     If Monstre(4)>=255
@@ -598,22 +589,22 @@
         TempoRepopMonstre(3)=Random(300,50)
       EndIf
     EndIf
+    
   ;--Affiche gameOver bare de vie
-  
     If Vie<=0 
-     Flamme()
-     DisplayTransparentSprite(38,1024/2-SpriteWidth(38)/2,768/2-SpriteHeight(38)/2,230)
-     timerGameOver+1
-     GameLaunch=0
-     If timerGameOver>200 
+      Flamme()
+      DisplayTransparentSprite(38,1024/2-SpriteWidth(38)/2,768/2-SpriteHeight(38)/2,230)
+      timerGameOver+1
+      GameLaunch=0
+      If timerGameOver>200 
         Mode=0
         timerGameOver=0
-     EndIf 
+      EndIf 
     EndIf
-
-     For j=1 To Vie
-       DisplaySprite(20,860+j*10,30)
-     Next
+  
+    For j=1 To Vie
+      DisplaySprite(20,860+j*10,30)
+    Next
 ;     
 ;     AffText(Str(MouseX()),100,500,255)
 ;     AffText(Str(MouseY()),100,600,255)
@@ -647,8 +638,8 @@
     Next
   EndProcedure
 ; IDE Options = PureBasic 5.31 (Windows - x86)
-; CursorPosition = 530
-; FirstLine = 257
+; CursorPosition = 267
+; FirstLine = 242
 ; Folding = -
 ; EnableUnicode
 ; EnableXP
