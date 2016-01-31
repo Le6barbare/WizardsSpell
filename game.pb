@@ -22,6 +22,7 @@
   Global tirage, precedant1, precedant2
   Global SelectMenu=0,TempoMenu=50,Mode,Quit, TempoStory=1000,GameLaunch=0
   Global nbfeuMax=10,nbetoileMax=15,Vie,viePerdu, FlamNum=1,timerGameOver,tempoMusicGame,tempoMusicMenu,lightning=1
+  Global animMonstreSpe=0
 
 ; Tableaux
   Global Dim Sorts(3), Dim PositionEffetSort(6)
@@ -182,7 +183,7 @@ Next
           If TempoMenu<=5
             PlaySound(3,#PB_Sound_MultiChannel)
             SelectMenu+1
-            If SelectMenu>2 : SelectMenu=0 :  EndIf
+            If SelectMenu>3 : SelectMenu=0 :  EndIf
             TempoMenu=50
           EndIf
         EndIf
@@ -190,7 +191,7 @@ Next
           If TempoMenu<=5
             PlaySound(3,#PB_Sound_MultiChannel)
             SelectMenu-1
-            If SelectMenu<0 : SelectMenu=2 :  EndIf
+            If SelectMenu<0 : SelectMenu=3 :  EndIf
             TempoMenu=50
           EndIf
         EndIf
@@ -204,21 +205,36 @@ Next
         ;Controles
         DisplayTransparentSprite(40,300,371)
         ;Quit
-        DisplayTransparentSprite(35,300,447)
+        DisplayTransparentSprite(35,300,523)
+        ; ! credit !
+        DisplayTransparentSprite(43,325,447)
       ElseIf SelectMenu=1
       ;Play
         DisplayTransparentSprite(33,327,295)
         ; ! Controles !
         DisplayTransparentSprite(41,300,371)
         ;Quit
-        DisplayTransparentSprite(35,300,447)
+        DisplayTransparentSprite(35,300,523)
+        ; ! credit !
+        DisplayTransparentSprite(43,325,447)
+      ElseIf SelectMenu=3
+      ;Play
+        DisplayTransparentSprite(33,327,295)
+      ;Controles
+        DisplayTransparentSprite(40,300,371)
+      ; ! Quit !
+        DisplayTransparentSprite(36,300,523)
+      ; ! credit !
+        DisplayTransparentSprite(43,325,447)
       ElseIf SelectMenu=2
       ;Play
-      DisplayTransparentSprite(33,327,295)
+        DisplayTransparentSprite(33,327,295)
       ;Controles
-      DisplayTransparentSprite(40,300,371)
+        DisplayTransparentSprite(40,300,371)
       ; ! Quit !
-      DisplayTransparentSprite(36,300,447)
+        DisplayTransparentSprite(35,300,523)
+      ; ! credit !
+        DisplayTransparentSprite(44,325,447)
       EndIf
       
       If EnableJoystick
@@ -236,6 +252,8 @@ Next
             GameLaunch=1
           ElseIf SelectMenu=1
             DisplaySprite(39,0,0)
+          ElseIf SelectMenu=2
+            DisplaySprite(42,0,0)
           Else
             Quit=1
           EndIf
@@ -347,6 +365,10 @@ Next
           tirage = Random(5,3)
         Wend
         Sorts(3) = tirage
+        
+        animMonstreSpe=1
+        
+        
 
       EndIf
       luneX.f = luneX.f + multi/30
@@ -691,8 +713,8 @@ Next
     Next
   EndProcedure
 ; IDE Options = PureBasic 5.31 (Windows - x86)
-; CursorPosition = 130
-; FirstLine = 117
+; CursorPosition = 228
+; FirstLine = 204
 ; Folding = -
 ; EnableUnicode
 ; EnableXP
