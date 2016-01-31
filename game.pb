@@ -21,15 +21,18 @@
   Global nuage1.f=Random(1024), nuage2.f=Random(1024), nuage3.f=Random(1024), nuage4.f=Random(1024), nuage5.f=Random(1024)
   Global tirage, precedant1, precedant2
   Global SelectMenu=0,TempoMenu=50,Mode,Quit, TempoStory=1000,GameLaunch=0
-  Global nbfeuMax=10, Vie, viePerdu,  FlamNum=1, timerGameOver
+  Global nbfeuMax=10,nbetoileMax=15, Vie, viePerdu,  FlamNum=1, timerGameOver,tempoMusicGame,tempoMusicMenu
 
 
 ; Tableaux
   Global Dim Sorts(3), Dim PositionEffetSort(6)
   Global Dim flamAnim(4), Dim flamWaitAnim(4)
+  Global Dim etoileAnim(7), Dim etoileWaitAnim(7)
   Global Dim Monstre(6), Dim TempoRepopMonstre(3)
 
   Global Dim feuX(nbfeuMax),Dim feuY(nbfeuMax),Dim fireBool(nbfeuMax)
+  
+  Global Dim etoileX(nbetoileMax),Dim etoileY(nbetoileMax)
   
   
 ;- PROCEDURE
@@ -37,6 +40,7 @@
   Declare GAME()
   Declare AffText(Text$,x.i,y.i,light.i)
   Declare Flamme()
+  Declare etoile()
 
 ;Ouvre un Screen Plein écran
   OpenScreen(1024, 768, 32, "")
@@ -45,10 +49,18 @@
   KeyboardMode(#PB_Keyboard_International)
 
 ;-Chargement Sound
-;LoadSound(1,"Data/SoundPlasmaGFire.ogg")
-
-
-
+  LoadSound(1,"Ressources/sound/Bruitage/game-over.ogg")
+  LoadSound(2,"Ressources/sound/Bruitage/changement-sort.ogg")
+  LoadSound(3,"Ressources/sound/Bruitage/menu.ogg")
+  LoadSound(4,"Ressources/sound/Bruitage/tir-baguette1.ogg")
+  
+  LoadSound(5,"Ressources/sound/Musiques/ambiance.ogg")
+  LoadSound(6,"Ressources/sound/Musiques/boucle.ogg")
+  
+  LoadSound(9,"Ressources/sound/Enregistrement/Welcome.ogg")
+  LoadSound(10,"Ressources/sound/Enregistrement/Story.ogg")
+  LoadSound(11,"Ressources/sound/Bruitage/grougrou1.ogg")
+ 
 ;-Chargement sprite
   LoadSprite(1,"Ressources/img/background-alpha.png")
   LoadSprite(2,"Ressources/img/HUB/Interface.png",#PB_Sprite_AlphaBlending)
@@ -80,21 +92,8 @@
   LoadSprite(40,"Ressources/img/TitleScreen/controle.png",#PB_Sprite_AlphaBlending)
   LoadSprite(41,"Ressources/img/TitleScreen/controle2.png",#PB_Sprite_AlphaBlending)
  
-  LoadSound(50,"Ressources/sound/Musiques/ambiance.ogg", #PB_Sound_Streaming)
-  LoadSound(51,"Ressources/sound/Musiques/boucle.ogg", #PB_Sound_Streaming)
-  LoadSound(52,"Ressources/sound/Musiques/musique-intro.ogg", #PB_Sound_Streaming)
-  LoadSound(53,"Ressources/sound/Musiques/musique-fin.ogg", #PB_Sound_Streaming)
-  
-  LoadSound(54,"Ressources/sound/Enregistrement/Welcome.ogg", #PB_Sound_Streaming)
-  LoadSound(55,"Ressources/sound/Enregistrement/Story.ogg", #PB_Sound_Streaming)
-  
-  LoadSound(56,"Ressources/sound/Bruitage/menu.ogg", #PB_Sound_Streaming)
-  LoadSound(57,"Ressources/sound/Bruitage/game-over.ogg", #PB_Sound_Streaming)
- 
-   
+ ;- Chargement du feu
   LoadImage(300,"Ressources/img/Animation/flamme2.png",#PB_Sprite_AlphaBlending)
- 
-  
   For j=0 To 4
     GrabImage(300,1,j*320/5,0, (j+1)*320/5,64)
     CreateSprite(300+j,320/5,64,#PB_Sprite_AlphaBlending)
@@ -103,6 +102,12 @@
     StopDrawing()
     TransparentSpriteColor(j+300,RGB(0,0,0)) 
   Next
+  
+ ;- Chargement des etoile
+For i=1 To 7
+  LoadSprite(600+i,"Ressources/img/Animation/Etoile/etoile"+Str(i)+".png",#PB_Sprite_AlphaBlending)
+  TransparentSpriteColor(600+i,RGB(0,0,0)) ; Couleur de  transparence
+Next
 
 ;- Creation de la bare du nb Vie
   CreateSprite(20,10,5,#PB_Sprite_AlphaBlending)
@@ -143,6 +148,16 @@
     feuX(i)=Random(840,640)
     feuY(i)=Random(670,580)
   Next
+  
+  For i=0 To nbetoileMax
+    etoileX(i)=Random(1024,0)
+    etoileY(i)=Random(310,0)
+  Next
+  
+  
+  ;-init music
+   
+   
 
 ;-  *********************  
 ;--  START GAME LOOP&
@@ -168,14 +183,18 @@
 
 ;- PROCEDURES
   Procedure Menu()
-    PlaySound(54)
-    If GameLaunch=0
-    
+  tempoMusicMenu+1
+  If tempoMusicMenu<5: PlaySound(6, #PB_Sound_Loop):EndIf
+  tempoMusicGame=0
+  PlaySound(9,100)
+    If GameLaunch=0  
       DisplaySprite(31,0,0)
       DisplayTransparentSprite(32,58,54)
+      ;AffText(Str(SelectMenu),200,200,255)
       If EnableJoystick
         If JoystickAxisX(0) Or JoystickAxisY(0)
           If TempoMenu<=5
+            PlaySound(3,#PB_Sound_MultiChannel)
             If SelectMenu=0 : SelectMenu=1 : Else : SelectMenu=0 : EndIf
             TempoMenu=50
           EndIf
@@ -183,25 +202,23 @@
       Else
         If KeyboardPushed(#PB_Key_Down) Or KeyboardPushed(#PB_Key_S)
           If TempoMenu<=5
-            If SelectMenu<2 : SelectMenu=SelectMenu+1 : EndIf
+            PlaySound(3,#PB_Sound_MultiChannel)
+            SelectMenu+1
+            If SelectMenu>2 : SelectMenu=0 :  EndIf
             TempoMenu=50
           EndIf
         EndIf
         If KeyboardPushed(#PB_Key_Up) Or KeyboardPushed(#PB_Key_Z)
           If TempoMenu<=5
-            If SelectMenu>0 : SelectMenu=SelectMenu-1 : EndIf
+            PlaySound(3,#PB_Sound_MultiChannel)
+            SelectMenu-1
+            If SelectMenu<0 : SelectMenu=2 :  EndIf
             TempoMenu=50
           EndIf
         EndIf
       EndIf
       If TempoMenu>5
         TempoMenu-2
-      EndIf
-        StopSound(54)
-      If IsSound(55)
-      
-  
-        PlaySound(55)
       EndIf
       If SelectMenu=0
       ;Play !!!!!
@@ -217,7 +234,7 @@
         DisplayTransparentSprite(41,300,371)
         ;Quit
         DisplayTransparentSprite(35,300,447)
-      Else
+      ElseIf SelectMenu=2
       ;Play
       DisplayTransparentSprite(33,327,295)
       ;Controle
@@ -230,6 +247,7 @@
         If JoystickButton(0, 1) Or JoystickButton(0, 2) Or JoystickButton(0, 3) Or JoystickButton(0, 4)
           If SelectMenu=0
             GameLaunch=1
+            
           Else
             Quit=1
           EndIf
@@ -246,8 +264,14 @@
         EndIf
       EndIf
       
+      ;-song menu
+      StopSound(9)
+        If IsSound(10)
+          PlaySound(10)
+        EndIf 
+      
     ElseIf GameLaunch=1
-
+      StopSound(6)
       DisplaySprite(37,0,0)
       ;TempoStory=1000
       TempoStory-1
@@ -292,13 +316,20 @@
         nuage2.f=Random(1024)
         nuage3.f=Random(1024)
         nuage4.f=Random(1024)
-        nuage5.f=Random(1024)
-    EndIf  
+        nuage5.f=Random(1024) 
+    EndIf
+  
   EndProcedure
   
   
   Procedure GAME()
-  StopSound(55)
+  tempoMusicMenu=0
+  StopSound(10)
+    tempoMusicGame+1
+    If tempoMusicGame<5
+    PlaySound(5,#PB_Sound_Loop)
+    EndIf
+  
     DisplaySprite(1,0,0)
   ;--calcul trajectoire lune
     luneWait = luneWait + 1
@@ -306,7 +337,7 @@
       If luneX.f<1024/2 : multi = multi + 1 : EndIf
       If luneX.f>1024/2 : multi = multi - 1 : EndIf
       If luneX.f>1024/2+200 : luneX.f=1024/2-200 : nbNuit+1 :
-
+      
       ;-melange des grimoires
         tirage = Random(5,3)
         precedant1 = tirage
@@ -322,8 +353,8 @@
           tirage = Random(5,3)
         Wend
         Sorts(3) = tirage
-
-    EndIf
+        PlaySound(5)
+      EndIf 
       luneX.f = luneX.f + multi/30
       luneWait=0
     EndIf
@@ -465,12 +496,15 @@
       If KeyboardPushed(#PB_Key_K) And SpellKey=0
         SpellKey=1
         TimeSort=5
+        PlaySound(4,#PB_Sound_MultiChannel)
       ElseIf KeyboardPushed(#PB_Key_L) And SpellKey=0
         SpellKey=2
         TimeSort=5
+        PlaySound(4,#PB_Sound_MultiChannel)
       ElseIf KeyboardPushed(#PB_Key_M) And SpellKey=0
         SpellKey=3
         TimeSort=5
+        PlaySound(4,#PB_Sound_MultiChannel)
       EndIf
     EndIf
     
@@ -479,6 +513,7 @@
         If Sorts(SpellKey)=Monstre(1)+2
           Score+1
           Monstre(1)=0
+          PlaySound(11);-----------------------------------------------------------
         Else
           Vie-1
           Monstre(1)=0
@@ -562,7 +597,7 @@
       Monstre(3)=0
       Vie-1
     EndIf
-    If Monstre(1)=0
+    If Monstre(1)=0  
       Monstre(4)=0
       If TempoRepopMonstre(1)>=10
         TempoRepopMonstre(1)-1
@@ -596,6 +631,10 @@
      DisplayTransparentSprite(38,1024/2-SpriteWidth(38)/2,768/2-SpriteHeight(38)/2,230)
      timerGameOver+1
      GameLaunch=0
+     If timerGameOver<=5
+       PlaySound(1,#PB_Sound_MultiChannel)
+     EndIf
+     If Vie<0 : Vie=0 :EndIf 
      If timerGameOver>200 
         Mode=0
         timerGameOver=0
@@ -605,6 +644,8 @@
      For j=1 To Vie
        DisplaySprite(20,860+j*10,30)
      Next
+     
+     
 ;     
 ;     AffText(Str(MouseX()),100,500,255)
 ;     AffText(Str(MouseY()),100,600,255)
@@ -618,7 +659,7 @@
      For j=0 To nbfeuMax
        For i=0 To 4
          flamWaitAnim(i)+1
-         If flamWaitAnim(i)>5
+         If flamWaitAnim(i)>10
            flamWaitAnim(i)=0
            flamAnim(i)+1
            If flamAnim(i)>4 :  flamAnim(i)=0 : EndIf    
@@ -627,6 +668,20 @@
        Next  
      Next 
   EndProcedure
+  
+;     Procedure etoile() 
+;      ;-Affichage des etoile;  
+;      For j=0 To nbetoileMax
+;       
+;          etoileWaitAnim(i)+1
+;          If etoileWaitAnim(i)>10
+;            etoileWaitAnim(i)=0
+;            If etoileAnim(i)>6 :  etoileAnim(i)=0 : EndIf    
+;          EndIf
+;          DisplayTransparentSprite(600+i,etoileX(j),etoileY(j),255)
+;        Next  
+;      Next 
+;   EndProcedure
 
   Procedure AffText(Text$,x.i,y.i,light.i)
     For j=1 To Len(Text$)                              ; Fait une boucle sur le nombre de caractères à afficher
@@ -638,8 +693,8 @@
     Next
   EndProcedure
 ; IDE Options = PureBasic 5.31 (Windows - x86)
-; CursorPosition = 200
-; FirstLine = 196
+; CursorPosition = 650
+; FirstLine = 636
 ; Folding = -
 ; EnableUnicode
 ; EnableXP
