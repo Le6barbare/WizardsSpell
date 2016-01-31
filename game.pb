@@ -6,7 +6,7 @@
   InitMouse()
   InitKeyboard()
   If InitJoystick()
-    EnableJoystick = 1
+    Global EnableJoystick = 1
   EndIf
   InitSound()
 
@@ -155,10 +155,19 @@
       DisplaySprite(31,0,0)
       DisplayTransparentSprite(32,58,54)
       
-      If KeyboardPushed(#PB_Key_Up) Or KeyboardPushed(#PB_Key_Down) Or KeyboardPushed(#PB_Key_Right) Or KeyboardPushed(#PB_Key_Left) Or KeyboardPushed(#PB_Key_Q) Or KeyboardPushed(#PB_Key_S) Or KeyboardPushed(#PB_Key_D) Or KeyboardPushed(#PB_Key_Z)
-        If TempoMenu<=5
-          If SelectMenu=0 : SelectMenu=1 : Else : SelectMenu=0 : EndIf
-          TempoMenu=50
+      If EnableJoystick
+        If JoystickAxisX(0) Or JoystickAxisY(0)
+          If TempoMenu<=5
+            If SelectMenu=0 : SelectMenu=1 : Else : SelectMenu=0 : EndIf
+            TempoMenu=50
+          EndIf
+        EndIf
+      Else
+        If KeyboardPushed(#PB_Key_Up) Or KeyboardPushed(#PB_Key_Down) Or KeyboardPushed(#PB_Key_Right) Or KeyboardPushed(#PB_Key_Left) Or KeyboardPushed(#PB_Key_Q) Or KeyboardPushed(#PB_Key_S) Or KeyboardPushed(#PB_Key_D) Or KeyboardPushed(#PB_Key_Z)
+          If TempoMenu<=5
+            If SelectMenu=0 : SelectMenu=1 : Else : SelectMenu=0 : EndIf
+            TempoMenu=50
+          EndIf
         EndIf
       EndIf
       
@@ -174,11 +183,21 @@
         DisplayTransparentSprite(36,292,424)
       EndIf
       
-      If KeyboardPushed(#PB_Key_Space) Or KeyboardPushed(#PB_Key_Return)
-        If SelectMenu=0
-          GameLaunch=1
-        Else
-          Quit=1
+      If EnableJoystick
+        If JoystickButton(0, 1) Or JoystickButton(0, 2) Or JoystickButton(0, 3) Or JoystickButton(0, 4)
+          If SelectMenu=0
+            GameLaunch=1
+          Else
+            Quit=1
+          EndIf
+        EndIf
+      Else
+        If KeyboardPushed(#PB_Key_Space) Or KeyboardPushed(#PB_Key_Return)
+          If SelectMenu=0
+            GameLaunch=1
+          Else
+            Quit=1
+          EndIf
         EndIf
       EndIf
       
@@ -188,8 +207,14 @@
       TempoStory-1
       AffText("TempoStory:" + Str(TempoStory),600,50,255)
       If TempoStory<900
-        If KeyboardPushed(#PB_Key_Space) Or KeyboardPushed(#PB_Key_Return) Or KeyboardPushed(#PB_Key_Up) Or KeyboardPushed(#PB_Key_Down) Or KeyboardPushed(#PB_Key_Right) Or KeyboardPushed(#PB_Key_Left) Or KeyboardPushed(#PB_Key_Q) Or KeyboardPushed(#PB_Key_S) Or KeyboardPushed(#PB_Key_D) Or KeyboardPushed(#PB_Key_Z)  Or KeyboardPushed(#PB_Key_K) Or KeyboardPushed(#PB_Key_L) Or KeyboardPushed(#PB_Key_M)
-          TempoStory=0
+        If EnableJoystick
+          If JoystickButton(0, 1) Or JoystickButton(0, 2) Or JoystickButton(0, 3) Or JoystickButton(0, 4)
+            TempoStory=0
+          EndIf
+        Else
+          If KeyboardPushed(#PB_Key_Space) Or KeyboardPushed(#PB_Key_Return) Or KeyboardPushed(#PB_Key_Up) Or KeyboardPushed(#PB_Key_Down) Or KeyboardPushed(#PB_Key_Right) Or KeyboardPushed(#PB_Key_Left) Or KeyboardPushed(#PB_Key_Q) Or KeyboardPushed(#PB_Key_S) Or KeyboardPushed(#PB_Key_D) Or KeyboardPushed(#PB_Key_Z)  Or KeyboardPushed(#PB_Key_K) Or KeyboardPushed(#PB_Key_L) Or KeyboardPushed(#PB_Key_M)
+            TempoStory=0
+          EndIf
         EndIf
       EndIf
       If TempoStory<5
@@ -282,13 +307,24 @@
 
   ;-- Gestion de la baguette
     If DirectionKey=0
-      If KeyboardPushed(#PB_Key_Left) Or KeyboardPushed(#PB_Key_Q)
-        DirectionKey=1
-      ElseIf KeyboardPushed(#PB_Key_Right) Or KeyboardPushed(#PB_Key_D)
-        DirectionKey=3
-        Angle+10
-      ElseIf KeyboardPushed(#PB_Key_Up) Or KeyboardPushed(#PB_Key_Z)
-        DirectionKey=2
+      If EnableJoystick    
+        If JoystickAxisX(0)=-1
+          DirectionKey=1
+        ElseIf JoystickAxisX(0)=1
+          DirectionKey=3
+          Angle+10
+        ElseIf JoystickAxisY(0)=-1
+          DirectionKey=2
+        EndIf
+      Else
+        If KeyboardPushed(#PB_Key_Left) Or KeyboardPushed(#PB_Key_Q)
+          DirectionKey=1
+        ElseIf KeyboardPushed(#PB_Key_Right) Or KeyboardPushed(#PB_Key_D)
+          DirectionKey=3
+          Angle+10
+        ElseIf KeyboardPushed(#PB_Key_Up) Or KeyboardPushed(#PB_Key_Z)
+          DirectionKey=2
+        EndIf
       EndIf
     EndIf
      
@@ -339,15 +375,31 @@
     DisplayTransparentSprite(6,300,600,255)
     
     ; Affichage Sort
-    If KeyboardPushed(#PB_Key_K) And SpellKey=0
-      SpellKey=1
-      TimeSort=5
-    ElseIf KeyboardPushed(#PB_Key_L) And SpellKey=0
-      SpellKey=2
-      TimeSort=5
-    ElseIf KeyboardPushed(#PB_Key_M) And SpellKey=0
-      SpellKey=3
-      TimeSort=5
+    If EnableJoystick
+      If JoystickButton(0, 3) And JoystickButtonPressed=0 And SpellKey=0
+        JoystickButtonPressed=1
+        SpellKey=1
+        TimeSort=5
+      ElseIf  Or JoystickButton(0, 1) And JoystickButtonPressed=0 And SpellKey=0
+        JoystickButtonPressed=1
+        SpellKey=2
+        TimeSort=5
+      ElseIf  Or JoystickButton(0, 2) And JoystickButtonPressed=0 And SpellKey=0
+        JoystickButtonPressed=1
+        SpellKey=3
+        TimeSort=5
+      EndIf
+    Else
+      If KeyboardPushed(#PB_Key_K) And SpellKey=0
+        SpellKey=1
+        TimeSort=5
+      ElseIf KeyboardPushed(#PB_Key_L) And SpellKey=0
+        SpellKey=2
+        TimeSort=5
+      ElseIf KeyboardPushed(#PB_Key_M) And SpellKey=0
+        SpellKey=3
+        TimeSort=5
+      EndIf
     EndIf
     
     If SpellKey<>0 And TimeSort=5
@@ -380,6 +432,13 @@
       EndIf
     EndIf
    
+   ;bool pressed = false
+   ; if button(A, appuyer) && pressed=false
+   ; pressed = true;
+   ; odihvoiehvdze
+   ; if button(A, relacher)
+   ; pressed = false
+   
     ;-utilisation des spell
     If SpellKey<>0 And TimeSort>0 
       If Angle=-20 Or Angle=0 Or Angle=20
@@ -388,8 +447,15 @@
       EndIf
     EndIf
     
-    If KeyboardReleased(#PB_Key_K) Or KeyboardReleased(#PB_Key_L) Or KeyboardReleased(#PB_Key_M)
-      SpellKey=0
+    If EnableJoystick
+      If JoystickButton(0, 3)=0 And JoystickButton(0, 2)=0 And JoystickButton(0, 1)=0
+        JoystickButtonPressed=0
+        SpellKey=0
+      EndIf
+    Else
+      If KeyboardReleased(#PB_Key_K) Or KeyboardReleased(#PB_Key_L) Or KeyboardReleased(#PB_Key_M)
+        SpellKey=0
+      EndIf
     EndIf
   ;-- getion pv/score/monstre
     AffText("TempoPop:"+Str(TempoRepopMonstre(1)),800,70,255)
@@ -492,7 +558,8 @@
   EndProcedure
 
 ; IDE Options = PureBasic 5.31 (Windows - x86)
-; CursorPosition = 8
+; CursorPosition = 450
+; FirstLine = 435
 ; Folding = 4
 ; EnableUnicode
 ; EnableXP
